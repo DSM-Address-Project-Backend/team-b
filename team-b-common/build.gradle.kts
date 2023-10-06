@@ -6,12 +6,6 @@ plugins {
 }
 
 dependencies {
-    // Web
-    implementation("org.springframework.boot:spring-boot-starter-web")
-
-    // Security
-    implementation("org.springframework.boot:spring-boot-starter-security")
-
     // JPA
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
@@ -24,9 +18,9 @@ tasks.getByName<Jar>("bootJar") {
 }
 
 allOpen {
-    annotation("javax.persistence.Entity")
+    annotation("jakarta.persistence.Entity")
 }
 
 noArg {
-    annotation("javax.persistence.Entity")
+    annotation("jakarta.persistence.Entity")
 }
