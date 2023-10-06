@@ -4,12 +4,6 @@ plugins {
     kotlin("plugin.spring") version "1.6.21"
 }
 
-dependencyManagement {
-    imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.2")
-    }
-}
-
 dependencies {
     // Web
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -17,12 +11,7 @@ dependencies {
     // Validation
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
-    // Security
-    implementation("org.springframework.boot:spring-boot-starter-security")
-
-    // Open Feign
-    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-
+    // impl project
     implementation(project(":team-b-common"))
 }
 
