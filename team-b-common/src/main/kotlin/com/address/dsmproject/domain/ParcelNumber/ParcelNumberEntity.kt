@@ -1,10 +1,10 @@
-package com.address.dsmproject.domain.entity
+package com.address.dsmproject.domain.ParcelNumber
 
 import jakarta.persistence.*
 import java.util.*
 
 @Entity
-@Table(name = "parcel_number")
+@Table(name = "tbl_parcel_number")
 class ParcelNumberEntity(
     id: UUID? = null,
     mainAddressNumber: Int,
@@ -13,7 +13,7 @@ class ParcelNumberEntity(
 
 ) {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "BINARY(16)", nullable = false)
     val id: UUID? = id
 

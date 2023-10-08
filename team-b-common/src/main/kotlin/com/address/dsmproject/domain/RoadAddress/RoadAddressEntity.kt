@@ -1,4 +1,4 @@
-package com.address.dsmproject.domain.entity
+package com.address.dsmproject.domain.RoadAddress
 
 import jakarta.persistence.*
 import java.util.*
@@ -12,7 +12,7 @@ class RoadAddressEntity (
     streetNumber: String,
     postalCode: Int
 ) {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "BINARY(16)", nullable = false)
     val id: UUID? = id
 
@@ -22,7 +22,7 @@ class RoadAddressEntity (
     @Column(nullable = false)
     val buildingSubNumber: Int = buildingSubNumber
 
-    @Column(length = 80, nullable = false)
+    @Column(columnDefinition = "VARCHAR(80)", nullable = false)
     val streetNumber: String = streetNumber
 
     @Column(name = "postal_code")
