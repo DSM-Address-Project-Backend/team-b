@@ -1,0 +1,27 @@
+package com.address.dsmproject.domain.roadAddress
+
+import jakarta.persistence.*
+import java.util.*
+
+@Entity
+@Table(name = "tbl_road_address")
+class RoadAddressEntity (
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = "BINARY(16)", nullable = false)
+    val id: UUID? = null,
+
+    @Column(columnDefinition = "INT", nullable = false)
+    val mainBuildingNumber: Int,
+
+    @Column(columnDefinition = "INT", nullable = false)
+    val subBuildingNumber: Int,
+
+    @Column(columnDefinition = "VARCHAR(80)", nullable = false)
+    val streetNumber: String,
+
+    @Column(columnDefinition = "INT", nullable = false)
+    val postalCode: Int,
+
+    @Column(columnDefinition = "VARCHAR(40)", nullable = false)
+    val buildingName: String
+)
