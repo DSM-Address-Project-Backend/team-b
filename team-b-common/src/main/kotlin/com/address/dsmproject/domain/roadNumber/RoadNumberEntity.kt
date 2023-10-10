@@ -4,8 +4,6 @@ import com.address.dsmproject.domain.parcelNumber.ParcelNumberEntity
 import com.address.dsmproject.domain.roadAddress.RoadAddressEntity
 import com.address.dsmproject.global.entity.BaseUUIDEntity
 import jakarta.persistence.*
-import java.util.*
-
 
 @Entity
 @Table(name = "tbl_road_number")
@@ -36,12 +34,12 @@ class RoadNumberEntity(
 ) : BaseUUIDEntity() {
 
     @MapsId
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parcel_number_id")
     val parcelNumberEntity: ParcelNumberEntity? = null
 
     @MapsId
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "road_address_id")
     val roadAddressEntity: RoadAddressEntity? = null
 }
