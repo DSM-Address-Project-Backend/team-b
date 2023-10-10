@@ -30,16 +30,15 @@ class RoadNumberEntity(
     val eupMyeonDongEng: String,
 
     @Column(columnDefinition = "VARCHAR(40)", nullable = false)
-    val beobJeongLiEng: String
-) : BaseUUIDEntity() {
+    val beobJeongLiEng: String,
 
     @MapsId
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parcel_number_id")
-    val parcelNumberEntity: ParcelNumberEntity? = null
+    val parcelNumberEntity: ParcelNumberEntity? = null,
 
     @MapsId
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "road_address_id")
     val roadAddressEntity: RoadAddressEntity? = null
-}
+) : BaseUUIDEntity()
