@@ -10,7 +10,7 @@ import java.util.UUID
 @Table(name = "tbl_road_number")
 class RoadNumberEntity(
     @EmbeddedId
-    val roadNumberId: RoadNumberId = RoadNumberId(UUID.randomUUID(), UUID.randomUUID()),
+    val roadNumberId: RoadNumberId,
 
     @Column(columnDefinition = "VARCHAR(40)", nullable = false)
     val cityProvinceName: String,
@@ -39,12 +39,12 @@ class RoadNumberEntity(
     @MapsId("parcelNumberId")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parcel_number_id")
-    val parcelNumberEntity: ParcelNumberEntity? = null,
+    val parcelNumberEntity: ParcelNumberEntity,
 
     @MapsId("roadAddressId")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "road_address_id")
-    val roadAddressEntity: RoadAddressEntity? = null
+    val roadAddressEntity: RoadAddressEntity
 )
 @Embeddable
 class RoadNumberId(
