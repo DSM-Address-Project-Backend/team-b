@@ -1,7 +1,7 @@
 plugins {
     id("org.springframework.boot") version "3.1.4"
-    kotlin("plugin.spring") version "1.6.21"
     id("io.spring.dependency-management") version "1.0.15.RELEASE"
+    kotlin("plugin.spring") version "1.6.21"
 }
 
 dependencyManagement {
@@ -16,6 +16,15 @@ dependencies {
 
     // Open Feign
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+
+    // Batch
+    implementation("org.springframework.batch:spring-batch-core")
+
+    // JPA
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    // MySQL
+    implementation("mysql:mysql-connector-java:8.0.33")
 
     implementation(project(":team-b-common"))
 }
