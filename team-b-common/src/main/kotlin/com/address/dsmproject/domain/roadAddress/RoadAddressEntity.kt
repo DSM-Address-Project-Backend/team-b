@@ -21,5 +21,5 @@ class RoadAddressEntity (
     val postalCode: Int,
 
     @Column(columnDefinition = "VARCHAR(40)", nullable = false)
-    val buildingName: String
+    val buildingName: String,
 ) : BaseUUIDEntity()
