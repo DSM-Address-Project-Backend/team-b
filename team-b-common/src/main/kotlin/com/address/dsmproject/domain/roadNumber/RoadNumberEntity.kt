@@ -44,13 +44,14 @@ class RoadNumberEntity(
     @MapsId("roadAddressId")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "road_address_id")
-    val roadAddressEntity: RoadAddressEntity
+    val roadAddressEntity: RoadAddressEntity,
 )
+
 @Embeddable
-class RoadNumberId(
+data class RoadNumberId(
     @Column(columnDefinition = "BINARY(16)", nullable = false)
     val parcelNumberId: UUID,
 
     @Column(columnDefinition = "BINARY(16)", nullable = false)
-    val roadAddressId: UUID
-): Serializable
+    val roadAddressId: UUID,
+) : Serializable
