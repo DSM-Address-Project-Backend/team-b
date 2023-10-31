@@ -1,11 +1,11 @@
 package com.address.dsmproject.scheduler
 
-import com.address.dsmproject.scheduler.AddressUtil.ENG_ADDRESS_FILE_PATH
-import com.address.dsmproject.scheduler.AddressUtil.ENG_ADDRESS_ZIP_FILE_PATH
-import com.address.dsmproject.scheduler.AddressUtil.ENG_REQ_TYPE
-import com.address.dsmproject.scheduler.AddressUtil.KOR_ADDRESS_FILE_PATH
-import com.address.dsmproject.scheduler.AddressUtil.KOR_ADDRESS_ZIP_FILE_PATH
-import com.address.dsmproject.scheduler.AddressUtil.KOR_REQ_TYPE
+import com.address.dsmproject.util.JusoConstants.ENG_ADDRESS_FILE_PATH
+import com.address.dsmproject.util.JusoConstants.ENG_ADDRESS_ZIP_FILE_PATH
+import com.address.dsmproject.util.JusoConstants.ENG_REQ_TYPE
+import com.address.dsmproject.util.JusoConstants.KOR_ADDRESS_FILE_PATH
+import com.address.dsmproject.util.JusoConstants.KOR_ADDRESS_ZIP_FILE_PATH
+import com.address.dsmproject.util.JusoConstants.KOR_REQ_TYPE
 import com.address.dsmproject.service.SaveAddressService
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component

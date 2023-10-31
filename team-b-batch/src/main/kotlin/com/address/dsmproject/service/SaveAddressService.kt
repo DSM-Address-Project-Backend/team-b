@@ -1,13 +1,13 @@
 package com.address.dsmproject.service
 
 import com.address.dsmproject.feign.AddressClient
-import com.address.dsmproject.scheduler.AddressUtil.ENG_REAL_FILE_NAME
-import com.address.dsmproject.scheduler.AddressUtil.ENG_REQ_TYPE
-import com.address.dsmproject.scheduler.AddressUtil.ENG_ZIP_NAME
-import com.address.dsmproject.scheduler.AddressUtil.KOR_REAL_FILE_NAME
-import com.address.dsmproject.scheduler.AddressUtil.KOR_REQ_TYPE
-import com.address.dsmproject.scheduler.AddressUtil.KOR_ZIP_NAME
-import com.address.dsmproject.scheduler.AddressUtil.ZIP
+import com.address.dsmproject.util.JusoConstants.ENG_REAL_FILE_NAME
+import com.address.dsmproject.util.JusoConstants.ENG_REQ_TYPE
+import com.address.dsmproject.util.JusoConstants.ENG_ZIP_NAME
+import com.address.dsmproject.util.JusoConstants.KOR_REAL_FILE_NAME
+import com.address.dsmproject.util.JusoConstants.KOR_REQ_TYPE
+import com.address.dsmproject.util.JusoConstants.KOR_ZIP_NAME
+import com.address.dsmproject.util.JusoConstants.ZIP
 import org.springframework.stereotype.Service
 import java.io.File
 import java.nio.file.Files
