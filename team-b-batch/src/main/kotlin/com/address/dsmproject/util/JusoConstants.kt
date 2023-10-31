@@ -1,6 +1,6 @@
-package com.address.dsmproject.scheduler
+package com.address.dsmproject.util
 
-object AddressUtil {
+object JusoConstants {
     const val ZIP = ".zip"
     const val KOR_ZIP_NAME = "_도로명주소_한글_전체분$ZIP"
     const val KOR_REAL_FILE_NAME = "RNADDR_KOR_"
