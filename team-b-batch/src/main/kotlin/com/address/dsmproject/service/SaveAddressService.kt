@@ -20,12 +20,12 @@ class SaveAddressService(
     private val addressClient: AddressClient,
 ) {
 
-    fun execute(reqType: String, zipFilePath: String, filePath: String) {
+    fun execute(reqType: String, zipFilePath: String, unzipTargetDirectoryPath: String) {
         Files.write(Paths.get(zipFilePath), getAddressInfo(reqType))
         val zipFile = File(zipFilePath)
-        val unzipFile = File(filePath)
-        unzipFile.mkdir()
-        unzip(zipFile, unzipFile)
+        val unzipTargetDirectory = File(unzipTargetDirectoryPath)
+        unzipTargetDirectory.mkdir()
+        unzip(zipFile, unzipTargetDirectory)
     }
 
     private fun getAddressInfo(reqType: String): ByteArray {
