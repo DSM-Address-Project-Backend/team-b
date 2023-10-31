@@ -13,4 +13,7 @@ object JusoConstants {
     const val KOR_ADDRESS_FILE_PATH = "${RESOURCE_PATH}unzipKor"
     const val ENG_ADDRESS_ZIP_FILE_PATH = "${RESOURCE_PATH}engAddress.zip"
     const val ENG_ADDRESS_FILE_PATH = "${RESOURCE_PATH}unzipEng"
+    const val CTPRVN_CD = "00"
+    const val INT_NUM = "undefined"
+    const val INT_FILE_NO = "undefined"
 }

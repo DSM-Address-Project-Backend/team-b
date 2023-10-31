@@ -1,9 +1,12 @@
 package com.address.dsmproject.service
 
 import com.address.dsmproject.feign.AddressClient
+import com.address.dsmproject.util.JusoConstants.CTPRVN_CD
 import com.address.dsmproject.util.JusoConstants.ENG_REAL_FILE_NAME
 import com.address.dsmproject.util.JusoConstants.ENG_REQ_TYPE
 import com.address.dsmproject.util.JusoConstants.ENG_ZIP_NAME
+import com.address.dsmproject.util.JusoConstants.INT_FILE_NO
+import com.address.dsmproject.util.JusoConstants.INT_NUM
 import com.address.dsmproject.util.JusoConstants.KOR_REAL_FILE_NAME
 import com.address.dsmproject.util.JusoConstants.KOR_REQ_TYPE
 import com.address.dsmproject.util.JusoConstants.KOR_ZIP_NAME
@@ -51,11 +54,11 @@ class SaveAddressService(
         return addressClient.getAddressInfo(
             reqType = reqType,
             yyyy = yyyy,
-            ctprvnCd = "00",
+            ctprvnCd = CTPRVN_CD,
             yyyyMM = yyyyMM,
             fileName = fileName,
-            intNum = "undefined",
-            intFileNo = "undefined",
+            intNum = INT_NUM,
+            intFileNo = INT_FILE_NO,
             realFileName = realFileName,
         ).body ?: throw RuntimeException("Body 없음") // TODO: 추후 예외 처리 추가
     }
