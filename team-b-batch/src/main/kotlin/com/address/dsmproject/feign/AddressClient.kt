@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam
 @FeignClient(name = "AddressClient", url = "\${address.url}")
 interface AddressClient {
 
-    @GetMapping
+    @GetMapping("/addrlink/download.do")
     fun getAddressInfo(
         @RequestParam("reqType") reqType: String,
         @RequestParam("regYmd") yyyy: String,
