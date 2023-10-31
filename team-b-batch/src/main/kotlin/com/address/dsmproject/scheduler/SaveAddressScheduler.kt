@@ -19,7 +19,6 @@ class SaveAddressScheduler(
     private val saveAddressService: SaveAddressService,
 ) {
 
-
     @Scheduled(cron = "0 0 0 1 * * ") // 매달 1일 0시 실행
     fun saveKoreaAddressScheduler() {
         deleteIfExistsFile(KOR_ADDRESS_ZIP_FILE_PATH, KOR_ADDRESS_FILE_PATH)
