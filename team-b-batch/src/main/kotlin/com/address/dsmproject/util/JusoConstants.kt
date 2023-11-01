@@ -8,7 +8,7 @@ object JusoConstants {
     const val ENG_REAL_FILE_NAME = "RN_ENG_"
     const val KOR_LANGUAGE = "ALLRNADR_KOR"
     const val ENG_LANGUAGE = "ALLRNADR_ENG"
-    private const val RESOURCE_PATH = "src/main/resources/"
+    private const val RESOURCE_PATH = "team-b-batch/src/main/resources/"
     const val KOR_ADDRESS_ZIP_FILE_PATH = "${RESOURCE_PATH}korAddress.zip"
     const val KOR_ADDRESS_FILE_PATH = "${RESOURCE_PATH}unzipKor"
     const val ENG_ADDRESS_ZIP_FILE_PATH = "${RESOURCE_PATH}engAddress.zip"
