@@ -16,4 +16,5 @@ object JusoConstants {
     const val CTPRVN_CD = "00"
     const val INT_NUM = "undefined"
     const val INT_FILE_NO = "undefined"
+    const val FILE_RESOURCES = "${RESOURCE_PATH}*.txt"
 }
