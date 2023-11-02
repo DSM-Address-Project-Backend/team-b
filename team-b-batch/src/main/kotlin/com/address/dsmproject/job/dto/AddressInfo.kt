@@ -50,6 +50,7 @@ fun AddressInfo.toRoadNumberEntity(
 )
 
 fun AddressInfo.toRoadAddressEntity() = RoadAddressEntity(
+    id = UUID.randomUUID(),
     mainBuildingNumber = this.mainAddressNumber,
     subBuildingNumber = this.subAddressNumber,
     postalCode = this.postalCode,
