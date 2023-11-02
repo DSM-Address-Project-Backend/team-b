@@ -4,10 +4,13 @@ import com.address.dsmproject.global.entity.BaseUUIDEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
+import java.util.UUID
 
 @Entity
 @Table(name = "tbl_road_address")
 class RoadAddressEntity(
+
+    id: UUID,
 
     @Column(columnDefinition = "INT", nullable = false)
     val mainBuildingNumber: Int,
@@ -20,4 +23,4 @@ class RoadAddressEntity(
 
     @Column(columnDefinition = "VARCHAR(40)", nullable = false)
     val buildingName: String,
-) : BaseUUIDEntity()
+) : BaseUUIDEntity(id)
