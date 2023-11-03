@@ -1,6 +1,6 @@
 package com.address.dsmproject.scheduler
 
-import com.address.dsmproject.dto.request.UnzipFileRequest
+import com.address.dsmproject.dto.UnzipFile
 import com.address.dsmproject.service.SaveAddressService
 import com.address.dsmproject.util.JusoConstants.ENG_ADDRESS_FILE_PATH
 import com.address.dsmproject.util.JusoConstants.ENG_ADDRESS_ZIP_FILE_PATH
@@ -27,7 +27,7 @@ class SaveAddressScheduler(
         deleteIfExistsDirectory(KOR_ADDRESS_ZIP_FILE_PATH)
         val (year, month) = getCurrentYearAndMonth()
         saveAddressService.execute(
-            UnzipFileRequest(
+            UnzipFile(
                 reqType = KOR_LANGUAGE,
                 zipFilePath = KOR_ADDRESS_ZIP_FILE_PATH,
                 unzipTargetDirectoryPath = KOR_ADDRESS_FILE_PATH,
@@ -43,7 +43,7 @@ class SaveAddressScheduler(
         deleteIfExistsDirectory(ENG_ADDRESS_ZIP_FILE_PATH)
         val (year, month) = getCurrentYearAndMonth()
         saveAddressService.execute(
-            UnzipFileRequest(
+            UnzipFile(
                 reqType = ENG_LANGUAGE,
                 zipFilePath = ENG_ADDRESS_ZIP_FILE_PATH,
                 unzipTargetDirectoryPath = ENG_ADDRESS_FILE_PATH,
