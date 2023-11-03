@@ -24,9 +24,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.Resource
 import org.springframework.core.io.ResourceLoader
-import org.springframework.core.io.support.ResourcePatternUtils
 import org.springframework.transaction.PlatformTransactionManager
-import java.io.File
 
 @Configuration
 class SaveJobConfiguration(
@@ -35,7 +33,9 @@ class SaveJobConfiguration(
     private val parcelNumberRepository: ParcelNumberRepository,
     private val roadAddressRepository: RoadAddressRepository,
     private val roadNumberRepository: RoadNumberRepository,
-    private var resourceLoader: ResourceLoader
+    private val resourceLoader: ResourceLoader,
+    @Value("classpath*:*.txt")
+    private val resources: Array<Resource>,
 ) {
 
     @Bean
@@ -49,7 +49,7 @@ class SaveJobConfiguration(
     @JobScope
     fun saveStep(): Step {
         return StepBuilder("saveStep", jobRepository)
-            .chunk<AddressInfo, AddressInfoVo>(10, transactionManager)
+            .chunk<AddressInfo, AddressInfoVo>(5, transactionManager)
             .reader(multiResourceItemReader())
             .processor(itemProcessor())
             .writer(entityItemWriter())
@@ -59,11 +59,8 @@ class SaveJobConfiguration(
     @Bean
     @StepScope
     fun multiResourceItemReader() = MultiResourceItemReader<AddressInfo>().apply {
-        setResources(
-            ResourcePatternUtils
-                .getResourcePatternResolver(resourceLoader)
-                .getResources("team-b-batch/src/main/resources/sejongKor.txt")
-        )
+//        val resources = ClassPathResource("/Users/kangmin/Documents/github/2023_project/team-b/team-b-batch/src/main/resources/*.txt")
+        setResources(resources)
         setDelegate(multiFileItemReader())
     }
 
@@ -73,7 +70,6 @@ class SaveJobConfiguration(
         setEncoding("euc-kr")
         setLineMapper { line: String, _: Int ->
             val split = line.split('|')
-            println(split)
             return@setLineMapper AddressInfo(
                 cityProvinceName = split[2],
                 countyDistricts = split[3],
