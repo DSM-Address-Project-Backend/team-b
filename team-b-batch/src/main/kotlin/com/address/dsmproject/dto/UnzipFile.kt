@@ -1,6 +1,6 @@
-package com.address.dsmproject.dto.request
+package com.address.dsmproject.dto
 
-data class UnzipFileRequest(
+data class UnzipFile(
     val reqType: String,
     val zipFilePath: String,
     val unzipTargetDirectoryPath: String,
