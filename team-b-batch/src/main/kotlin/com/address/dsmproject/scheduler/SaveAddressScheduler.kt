@@ -8,7 +8,7 @@ import com.address.dsmproject.util.JusoConstants.ENG_LANGUAGE
 import com.address.dsmproject.util.JusoConstants.KOR_ADDRESS_FILE_PATH
 import com.address.dsmproject.util.JusoConstants.KOR_ADDRESS_ZIP_FILE_PATH
 import com.address.dsmproject.util.JusoConstants.KOR_LANGUAGE
-import com.address.dsmproject.util.getCurrentYearAndMonth
+import com.address.dsmproject.util.targetYearAndMonth
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.io.File
@@ -25,7 +25,7 @@ class SaveAddressScheduler(
     fun saveKoreaAddressScheduler() {
         deleteFileIfExists(KOR_ADDRESS_FILE_PATH)
         deleteDirectoryIfExists(KOR_ADDRESS_ZIP_FILE_PATH)
-        val (year, month) = getCurrentYearAndMonth()
+        val (year, month) = targetYearAndMonth()
         saveAddressService.execute(
             UnzipFile(
                 reqType = KOR_LANGUAGE,
@@ -41,7 +41,7 @@ class SaveAddressScheduler(
     fun saveEnglishAddressScheduler() {
         deleteFileIfExists(ENG_ADDRESS_ZIP_FILE_PATH)
         deleteDirectoryIfExists(ENG_ADDRESS_ZIP_FILE_PATH)
-        val (year, month) = getCurrentYearAndMonth()
+        val (year, month) = targetYearAndMonth()
         saveAddressService.execute(
             UnzipFile(
                 reqType = ENG_LANGUAGE,
