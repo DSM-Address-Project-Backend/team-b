@@ -1,6 +1,2 @@
-spring:
-  profiles:
-    active: ${PROFILE}
-
 address:
   url: ${ADDRESS_URL}
