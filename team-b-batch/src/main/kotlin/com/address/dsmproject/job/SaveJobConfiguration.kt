@@ -8,7 +8,6 @@ import com.address.dsmproject.job.dto.AddressInfoVo
 import com.address.dsmproject.job.dto.toParcelNumberEntity
 import com.address.dsmproject.job.dto.toRoadAddressEntity
 import com.address.dsmproject.job.dto.toRoadNumberEntity
-import com.address.dsmproject.util.JusoConstants.FILE_RESOURCES
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
 import org.springframework.batch.core.configuration.annotation.JobScope
@@ -20,11 +19,14 @@ import org.springframework.batch.item.ItemProcessor
 import org.springframework.batch.item.ItemWriter
 import org.springframework.batch.item.file.FlatFileItemReader
 import org.springframework.batch.item.file.MultiResourceItemReader
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.io.Resource
 import org.springframework.core.io.ResourceLoader
 import org.springframework.core.io.support.ResourcePatternUtils
 import org.springframework.transaction.PlatformTransactionManager
+import java.io.File
 
 @Configuration
 class SaveJobConfiguration(
@@ -33,7 +35,7 @@ class SaveJobConfiguration(
     private val parcelNumberRepository: ParcelNumberRepository,
     private val roadAddressRepository: RoadAddressRepository,
     private val roadNumberRepository: RoadNumberRepository,
-    private val resourceLoader: ResourceLoader,
+    private var resourceLoader: ResourceLoader
 ) {
 
     @Bean
@@ -57,7 +59,11 @@ class SaveJobConfiguration(
     @Bean
     @StepScope
     fun multiResourceItemReader() = MultiResourceItemReader<AddressInfo>().apply {
-        setResources(ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources(FILE_RESOURCES))
+        setResources(
+            ResourcePatternUtils
+                .getResourcePatternResolver(resourceLoader)
+                .getResources("team-b-batch/src/main/resources/sejongKor.txt")
+        )
         setDelegate(multiFileItemReader())
     }
 
@@ -67,6 +73,7 @@ class SaveJobConfiguration(
         setEncoding("euc-kr")
         setLineMapper { line: String, _: Int ->
             val split = line.split('|')
+            println(split)
             return@setLineMapper AddressInfo(
                 cityProvinceName = split[2],
                 countyDistricts = split[3],
@@ -102,6 +109,7 @@ class SaveJobConfiguration(
     fun entityItemWriter(): ItemWriter<AddressInfoVo> {
         return ItemWriter<AddressInfoVo> { processor ->
             processor.items.map {
+                println("success")
                 parcelNumberRepository.save(it.parcelNumberEntity)
                 roadAddressRepository.save(it.roadAddressEntity)
                 roadNumberRepository.save(it.roadNumberEntity)
