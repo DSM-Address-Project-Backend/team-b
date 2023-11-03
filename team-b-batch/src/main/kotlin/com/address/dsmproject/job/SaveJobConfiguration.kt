@@ -3,11 +3,8 @@ package com.address.dsmproject.job
 import com.address.dsmproject.domain.parcelNumber.ParcelNumberRepository
 import com.address.dsmproject.domain.roadAddress.RoadAddressRepository
 import com.address.dsmproject.domain.roadNumber.RoadNumberRepository
-import com.address.dsmproject.job.dto.AddressInfo
-import com.address.dsmproject.job.dto.AddressInfoVo
-import com.address.dsmproject.job.dto.toParcelNumberEntity
-import com.address.dsmproject.job.dto.toRoadAddressEntity
-import com.address.dsmproject.job.dto.toRoadNumberEntity
+import com.address.dsmproject.job.dto.*
+import com.address.dsmproject.util.JusoConstants.FILE_RESOURCES
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
 import org.springframework.batch.core.configuration.annotation.JobScope
@@ -23,8 +20,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.Resource
-import org.springframework.core.io.ResourceLoader
 import org.springframework.transaction.PlatformTransactionManager
+import kotlin.reflect.jvm.isAccessible
 
 @Configuration
 class SaveJobConfiguration(
@@ -33,8 +30,7 @@ class SaveJobConfiguration(
     private val parcelNumberRepository: ParcelNumberRepository,
     private val roadAddressRepository: RoadAddressRepository,
     private val roadNumberRepository: RoadNumberRepository,
-    private val resourceLoader: ResourceLoader,
-    @Value("classpath*:*.txt")
+    @Value("classpath*:./*.txt")
     private val resources: Array<Resource>,
 ) {
 
@@ -59,18 +55,18 @@ class SaveJobConfiguration(
     @Bean
     @StepScope
     fun multiResourceItemReader() = MultiResourceItemReader<AddressInfo>().apply {
-//        val resources = ClassPathResource("/Users/kangmin/Documents/github/2023_project/team-b/team-b-batch/src/main/resources/*.txt")
         setResources(resources)
         setDelegate(multiFileItemReader())
     }
 
     @Bean
     @StepScope
-    fun multiFileItemReader() = FlatFileItemReader<AddressInfo>().apply {
-        setEncoding("euc-kr")
-        setLineMapper { line: String, _: Int ->
+    fun multiFileItemReader(): FlatFileItemReader<AddressInfo> {
+        val itemReader = FlatFileItemReader<AddressInfo>()
+        itemReader.setLinesToSkip(1)
+        itemReader.setLineMapper { line: String, _: Int ->
             val split = line.split('|')
-            return@setLineMapper AddressInfo(
+            AddressInfo(
                 cityProvinceName = split[2],
                 countyDistricts = split[3],
                 eupMyeonDong = split[4],
@@ -87,6 +83,8 @@ class SaveJobConfiguration(
                 eupMyeonDongEng = "test"
             )
         }
+
+        return itemReader
     }
 
     @Bean
@@ -105,7 +103,6 @@ class SaveJobConfiguration(
     fun entityItemWriter(): ItemWriter<AddressInfoVo> {
         return ItemWriter<AddressInfoVo> { processor ->
             processor.items.map {
-                println("success")
                 parcelNumberRepository.save(it.parcelNumberEntity)
                 roadAddressRepository.save(it.roadAddressEntity)
                 roadNumberRepository.save(it.roadNumberEntity)
