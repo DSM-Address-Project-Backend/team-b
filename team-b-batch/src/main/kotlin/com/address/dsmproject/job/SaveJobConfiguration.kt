@@ -28,7 +28,7 @@ class SaveJobConfiguration(
     private val parcelNumberRepository: ParcelNumberRepository,
     private val roadAddressRepository: RoadAddressRepository,
     private val roadNumberRepository: RoadNumberRepository,
-    @Value("classpath:/data/*.txt")
+    @Value("classpath:/unzipKor/rnaddrkor*.txt")
     private val resources: Array<Resource>,
 ) {
 
@@ -43,7 +43,7 @@ class SaveJobConfiguration(
     @JobScope
     fun saveStep(): Step {
         return StepBuilder("saveStep", jobRepository)
-            .chunk<AddressInfo, AddressInfoVo>(5, transactionManager)
+            .chunk<AddressInfo, AddressInfoVo>(20, transactionManager)
             .reader(multiResourceItemReader())
             .processor(itemProcessor())
             .writer(entityItemWriter())
@@ -60,6 +60,7 @@ class SaveJobConfiguration(
     @Bean
     @StepScope
     fun multiFileItemReader() = FlatFileItemReader<AddressInfo>().apply {
+        setEncoding("euc-kr")
         setLineMapper { line: String, _: Int ->
             val split = line.split('|')
             AddressInfo(
