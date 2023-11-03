@@ -1,12 +1,13 @@
 package com.address.dsmproject.domain.roadAddress
 
 import com.address.dsmproject.global.entity.BaseUUIDEntity
-import jakarta.persistence.*
-import java.util.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 
 @Entity
 @Table(name = "tbl_road_address")
-class RoadAddressEntity (
+class RoadAddressEntity(
 
     @Column(columnDefinition = "INT", nullable = false)
     val mainBuildingNumber: Int,
@@ -14,12 +15,9 @@ class RoadAddressEntity (
     @Column(columnDefinition = "INT", nullable = false)
     val subBuildingNumber: Int,
 
-    @Column(columnDefinition = "VARCHAR(80)", nullable = false)
-    val streetNumber: String,
-
     @Column(columnDefinition = "INT", nullable = false)
     val postalCode: Int,
 
     @Column(columnDefinition = "VARCHAR(40)", nullable = false)
-    val buildingName: String
+    val buildingName: String,
 ) : BaseUUIDEntity()

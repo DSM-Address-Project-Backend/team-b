@@ -11,6 +11,12 @@ dependencies {
     // Validation
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
+    // JPA
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    // MySQL
+    implementation("mysql:mysql-connector-java:8.0.33")
+
     // impl project
     implementation(project(":team-b-common"))
 }
