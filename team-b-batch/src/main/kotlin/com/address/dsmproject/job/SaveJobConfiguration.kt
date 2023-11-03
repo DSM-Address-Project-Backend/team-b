@@ -36,10 +36,6 @@ class SaveJobConfiguration(
     private val resourceLoader: ResourceLoader,
 ) {
 
-    companion object {
-
-    }
-
     @Bean
     fun saveJob(): Job {
         return JobBuilder("saveJob", jobRepository)
@@ -66,7 +62,9 @@ class SaveJobConfiguration(
     }
 
     @Bean
+    @StepScope
     fun multiFileItemReader() = FlatFileItemReader<AddressInfo>().apply {
+        setEncoding("euc-kr")
         setLineMapper { line: String, _: Int ->
             val split = line.split('|')
             return@setLineMapper AddressInfo(
@@ -89,6 +87,7 @@ class SaveJobConfiguration(
     }
 
     @Bean
+    @StepScope
     fun itemProcessor(): ItemProcessor<AddressInfo, AddressInfoVo> {
         return ItemProcessor<AddressInfo, AddressInfoVo>() {
             val parcelNumber = it.toParcelNumberEntity()
@@ -99,6 +98,7 @@ class SaveJobConfiguration(
     }
 
     @Bean
+    @StepScope
     fun entityItemWriter(): ItemWriter<AddressInfoVo> {
         return ItemWriter<AddressInfoVo> { processor ->
             processor.items.map {
