@@ -1,7 +1,7 @@
 package com.address.dsmproject.service
 
-import com.address.dsmproject.dto.request.UnzipFileRequest
-import com.address.dsmproject.dto.response.AddressInfoParamResponse
+import com.address.dsmproject.dto.AddressInfoParam
+import com.address.dsmproject.dto.UnzipFile
 import com.address.dsmproject.feign.AddressClient
 import com.address.dsmproject.util.FileUtil
 import com.address.dsmproject.util.JusoConstants.CTPRVN_CD
@@ -26,31 +26,26 @@ class SaveAddressService(
     private val fileUtil: FileUtil,
 ) {
 
-    fun execute(request: UnzipFileRequest) {
-        val (reqType, zipFilePath, unzipTargetDirectoryPath, year, month) = request
-
-        Files.write(Paths.get(zipFilePath), getAddressInfo(reqType, year, month))
-        val zipFile = File(zipFilePath)
-        val unzipTargetDirectory = File(unzipTargetDirectoryPath)
+    fun execute(unzipFile: UnzipFile) {
+        Files.write(
+            Paths.get(unzipFile.zipFilePath),
+            getAddressInfo(unzipFile.reqType, unzipFile.year, unzipFile.month)
+        )
+        val zipFile = File(unzipFile.zipFilePath)
+        val unzipTargetDirectory = File(unzipFile.unzipTargetDirectoryPath)
         unzipTargetDirectory.mkdir()
 
         fileUtil.unzip(zipFile, unzipTargetDirectory)
     }
 
     private fun getAddressInfo(language: String, year: Int, month: Int): ByteArray {
-        val yyyy = year.toString()
-        val mm = month.padStartValue().toString()
-        val addressInfoParam = buildAddressInfoParam(
-            language = language,
-            yyyy = yyyy,
-            mm = mm,
-        )
+        val addressInfoParam = buildAddressInfoParam(language, year, month)
 
         return addressClient.getAddressInfo(
             reqType = language,
-            yyyy = yyyy,
+            yyyy = addressInfoParam.year,
             ctprvnCd = CTPRVN_CD,
-            yyyyMM = yyyy + mm,
+            yyyyMM = addressInfoParam.year + addressInfoParam.month,
             fileName = addressInfoParam.fileName,
             intNum = INT_NUM,
             intFileNo = INT_FILE_NO,
@@ -58,7 +53,9 @@ class SaveAddressService(
         ).body ?: throw RuntimeException("Body 없음") // TODO: 추후 예외 처리 추가
     }
 
-    private fun buildAddressInfoParam(language: String, yyyy: String, mm: String): AddressInfoParamResponse {
+    private fun buildAddressInfoParam(language: String, year: Int, month: Int): AddressInfoParam {
+        val yyyy = year.toString()
+        val mm = month.padStartValue().toString()
         val yyyyMM = yyyy + mm
         val yyMMZip = "${yyyy.slice(2..3)}$mm$ZIP"
         var fileName = ""
@@ -75,6 +72,6 @@ class SaveAddressService(
             }
         }
 
-        return AddressInfoParamResponse(yyMMZip, fileName, realFileName)
+        return AddressInfoParam(yyyy, mm, yyMMZip, fileName, realFileName)
     }
 }
