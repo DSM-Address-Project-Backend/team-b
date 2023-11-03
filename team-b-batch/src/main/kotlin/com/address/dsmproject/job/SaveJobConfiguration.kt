@@ -1,16 +1,13 @@
 package com.address.dsmproject.job
 
-import com.address.dsmproject.domain.parcelNumber.ParcelNumberEntity
 import com.address.dsmproject.domain.parcelNumber.ParcelNumberRepository
-import com.address.dsmproject.domain.roadAddress.RoadAddressEntity
 import com.address.dsmproject.domain.roadAddress.RoadAddressRepository
-import com.address.dsmproject.domain.roadNumber.RoadNumberEntity
 import com.address.dsmproject.domain.roadNumber.RoadNumberRepository
 import com.address.dsmproject.job.dto.AddressInfo
+import com.address.dsmproject.job.dto.AddressInfoVo
 import com.address.dsmproject.job.dto.toParcelNumberEntity
 import com.address.dsmproject.job.dto.toRoadAddressEntity
 import com.address.dsmproject.job.dto.toRoadNumberEntity
-import com.address.dsmproject.util.JusoConstants
 import com.address.dsmproject.util.JusoConstants.FILE_RESOURCES
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
@@ -54,7 +51,7 @@ class SaveJobConfiguration(
     @JobScope
     fun saveStep(): Step {
         return StepBuilder("saveStep", jobRepository)
-            .chunk<AddressInfo, Triple<ParcelNumberEntity, RoadAddressEntity, RoadNumberEntity>>(10, transactionManager)
+            .chunk<AddressInfo, AddressInfoVo>(10, transactionManager)
             .reader(multiResourceItemReader())
             .processor(itemProcessor())
             .writer(entityItemWriter())
@@ -63,21 +60,15 @@ class SaveJobConfiguration(
 
     @Bean
     @StepScope
-    fun multiResourceItemReader(): MultiResourceItemReader<AddressInfo> {
-        val resourceItemReader = MultiResourceItemReader<AddressInfo>()
-        resourceItemReader.setResources(
-            ResourcePatternUtils.getResourcePatternResolver(this.resourceLoader)
-                .getResources(FILE_RESOURCES)
-        )
-        resourceItemReader.setDelegate(multiFileItemReader())
-        return resourceItemReader
+    fun multiResourceItemReader() = MultiResourceItemReader<AddressInfo>().apply {
+        setResources(ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources(FILE_RESOURCES))
+        setDelegate(multiFileItemReader())
     }
 
     @Bean
-    fun multiFileItemReader(): FlatFileItemReader<AddressInfo> {
-        val flatFileItemReader = FlatFileItemReader<AddressInfo>()
-        flatFileItemReader.setLineMapper { line: String?, _: Int ->
-            val split = line?.split('|')!!
+    fun multiFileItemReader() = FlatFileItemReader<AddressInfo>().apply {
+        setLineMapper { line: String, _: Int ->
+            val split = line.split('|')
             return@setLineMapper AddressInfo(
                 cityProvinceName = split[2],
                 countyDistricts = split[3],
@@ -95,27 +86,25 @@ class SaveJobConfiguration(
                 eupMyeonDongEng = "test"
             )
         }
-
-        return flatFileItemReader
     }
 
     @Bean
-    fun itemProcessor(): ItemProcessor<AddressInfo, Triple<ParcelNumberEntity, RoadAddressEntity, RoadNumberEntity>> {
-        return ItemProcessor<AddressInfo, Triple<ParcelNumberEntity, RoadAddressEntity, RoadNumberEntity>>() {
+    fun itemProcessor(): ItemProcessor<AddressInfo, AddressInfoVo> {
+        return ItemProcessor<AddressInfo, AddressInfoVo>() {
             val parcelNumber = it.toParcelNumberEntity()
             val roadAddress = it.toRoadAddressEntity()
             val roadNumber = it.toRoadNumberEntity(parcelNumber, roadAddress)
-            return@ItemProcessor Triple(parcelNumber, roadAddress, roadNumber)
+            return@ItemProcessor AddressInfoVo(parcelNumber, roadAddress, roadNumber)
         }
     }
 
     @Bean
-    fun entityItemWriter(): ItemWriter<Triple<ParcelNumberEntity, RoadAddressEntity, RoadNumberEntity>> {
-        return ItemWriter<Triple<ParcelNumberEntity, RoadAddressEntity, RoadNumberEntity>> { it ->
-            it.items.forEach {
-                parcelNumberRepository.save(it.first)
-                roadAddressRepository.save(it.second)
-                roadNumberRepository.save(it.third)
+    fun entityItemWriter(): ItemWriter<AddressInfoVo> {
+        return ItemWriter<AddressInfoVo> { processor ->
+            processor.items.map {
+                parcelNumberRepository.save(it.parcelNumberEntity)
+                roadAddressRepository.save(it.roadAddressEntity)
+                roadNumberRepository.save(it.roadNumberEntity)
             }
         }
     }
