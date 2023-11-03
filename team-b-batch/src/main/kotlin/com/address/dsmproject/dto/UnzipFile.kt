@@ -5,5 +5,5 @@ data class UnzipFile(
     val zipFilePath: String,
     val unzipTargetDirectoryPath: String,
     val year: Int,
-    val month: Int,
+    val month: String,
 )

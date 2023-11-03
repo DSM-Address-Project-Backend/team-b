@@ -14,7 +14,6 @@ import com.address.dsmproject.util.JusoConstants.KOR_LANGUAGE
 import com.address.dsmproject.util.JusoConstants.KOR_REAL_FILE_NAME
 import com.address.dsmproject.util.JusoConstants.KOR_ZIP_NAME
 import com.address.dsmproject.util.JusoConstants.ZIP
-import com.address.dsmproject.util.padStartValue
 import org.springframework.stereotype.Service
 import java.io.File
 import java.nio.file.Files
@@ -28,8 +27,7 @@ class SaveAddressService(
 
     fun execute(unzipFile: UnzipFile) {
         Files.write(
-            Paths.get(unzipFile.zipFilePath),
-            getAddressInfo(unzipFile.reqType, unzipFile.year, unzipFile.month)
+            Paths.get(unzipFile.zipFilePath), getAddressInfo(unzipFile.reqType, unzipFile.year, unzipFile.month)
         )
         val zipFile = File(unzipFile.zipFilePath)
         val unzipTargetDirectory = File(unzipFile.unzipTargetDirectoryPath)
@@ -38,7 +36,7 @@ class SaveAddressService(
         fileUtil.unzip(zipFile, unzipTargetDirectory)
     }
 
-    private fun getAddressInfo(language: String, year: Int, month: Int): ByteArray {
+    private fun getAddressInfo(language: String, year: Int, month: String): ByteArray {
         val addressInfoParam = buildAddressInfoParam(language, year, month)
 
         return addressClient.getAddressInfo(
@@ -53,9 +51,9 @@ class SaveAddressService(
         ).body ?: throw RuntimeException("Body 없음") // TODO: 추후 예외 처리 추가
     }
 
-    private fun buildAddressInfoParam(language: String, year: Int, month: Int): AddressInfoParam {
+    private fun buildAddressInfoParam(language: String, year: Int, month: String): AddressInfoParam {
         val yyyy = year.toString()
-        val mm = month.padStartValue().toString()
+        val mm = month.padStart(2, '0')
         val yyyyMM = yyyy + mm
         val yyMMZip = "${yyyy.slice(2..3)}$mm$ZIP"
         var fileName = ""
