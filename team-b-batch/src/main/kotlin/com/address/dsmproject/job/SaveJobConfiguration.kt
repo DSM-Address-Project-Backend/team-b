@@ -4,7 +4,6 @@ import com.address.dsmproject.domain.parcelNumber.ParcelNumberRepository
 import com.address.dsmproject.domain.roadAddress.RoadAddressRepository
 import com.address.dsmproject.domain.roadNumber.RoadNumberRepository
 import com.address.dsmproject.job.dto.*
-import com.address.dsmproject.util.JusoConstants.FILE_RESOURCES
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
 import org.springframework.batch.core.configuration.annotation.JobScope
@@ -21,7 +20,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.Resource
 import org.springframework.transaction.PlatformTransactionManager
-import kotlin.reflect.jvm.isAccessible
 
 @Configuration
 class SaveJobConfiguration(
@@ -30,7 +28,7 @@ class SaveJobConfiguration(
     private val parcelNumberRepository: ParcelNumberRepository,
     private val roadAddressRepository: RoadAddressRepository,
     private val roadNumberRepository: RoadNumberRepository,
-    @Value("classpath*:./*.txt")
+    @Value("classpath:/data/*.txt")
     private val resources: Array<Resource>,
 ) {
 
@@ -61,10 +59,8 @@ class SaveJobConfiguration(
 
     @Bean
     @StepScope
-    fun multiFileItemReader(): FlatFileItemReader<AddressInfo> {
-        val itemReader = FlatFileItemReader<AddressInfo>()
-        itemReader.setLinesToSkip(1)
-        itemReader.setLineMapper { line: String, _: Int ->
+    fun multiFileItemReader() = FlatFileItemReader<AddressInfo>().apply {
+        setLineMapper { line: String, _: Int ->
             val split = line.split('|')
             AddressInfo(
                 cityProvinceName = split[2],
@@ -73,18 +69,17 @@ class SaveJobConfiguration(
                 beobJeongLi = split[5],
                 mainAddressNumber = split[7].toInt(),
                 subAddressNumber = split[8].toInt(),
-                buildingName = split[10],
+                buildingName = split[22],
                 mainBuildingNumber = split[12],
                 subBuildingNumber = split[13],
                 postalCode = split[16].toInt(),
                 countyDistrictsEng = "test",
                 cityProvinceNameEng = "test",
                 beobJeongLiEng = "test",
-                eupMyeonDongEng = "test"
+                eupMyeonDongEng = "test",
+                streetNumber = split[10],
             )
         }
-
-        return itemReader
     }
 
     @Bean
