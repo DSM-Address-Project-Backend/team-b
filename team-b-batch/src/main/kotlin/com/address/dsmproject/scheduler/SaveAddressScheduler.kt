@@ -11,6 +11,7 @@ import com.address.dsmproject.util.JusoConstants.KOR_ADDRESS_ZIP_FILE_PATH
 import com.address.dsmproject.util.JusoConstants.KOR_LANGUAGE
 import com.address.dsmproject.util.targetYearAndMonth
 import org.springframework.batch.core.JobParameters
+import org.springframework.batch.core.JobParametersBuilder
 import org.springframework.batch.core.launch.JobLauncher
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -18,6 +19,8 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.*
+import kotlin.Comparator
 
 @Component
 class SaveAddressScheduler(
@@ -40,7 +43,12 @@ class SaveAddressScheduler(
                 month = month,
             )
         )
-        jobLauncher.run(saveJobConfiguration.saveJob(), JobParameters())
+        jobLauncher.run(
+            saveJobConfiguration.saveJob(),
+            JobParametersBuilder()
+                .addString("saveAddress", UUID.randomUUID().toString())
+                .toJobParameters()
+        )
     }
 
     @Scheduled(cron = "0 0 0 1 * * ") // 매달 1일 0시 실행

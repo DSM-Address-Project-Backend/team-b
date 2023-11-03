@@ -34,6 +34,7 @@ class SaveAddressService(
         unzipTargetDirectory.mkdir()
 
         fileUtil.unzip(zipFile, unzipTargetDirectory)
+        zipFile.delete()
     }
 
     private fun getAddressInfo(language: String, year: Int, month: String): ByteArray {
