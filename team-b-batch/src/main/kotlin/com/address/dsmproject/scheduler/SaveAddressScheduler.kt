@@ -23,8 +23,8 @@ class SaveAddressScheduler(
 
     @Scheduled(cron = "0 0 0 1 * * ") // 매달 1일 0시 실행
     fun saveKoreaAddressScheduler() {
-        deleteIfExistsFile(KOR_ADDRESS_FILE_PATH)
-        deleteIfExistsDirectory(KOR_ADDRESS_ZIP_FILE_PATH)
+        deleteFileIfExists(KOR_ADDRESS_FILE_PATH)
+        deleteDirectoryIfExists(KOR_ADDRESS_ZIP_FILE_PATH)
         val (year, month) = getCurrentYearAndMonth()
         saveAddressService.execute(
             UnzipFile(
@@ -39,8 +39,8 @@ class SaveAddressScheduler(
 
     @Scheduled(cron = "0 0 0 1 * * ") // 매달 1일 0시 실행
     fun saveEnglishAddressScheduler() {
-        deleteIfExistsFile(ENG_ADDRESS_ZIP_FILE_PATH)
-        deleteIfExistsDirectory(ENG_ADDRESS_ZIP_FILE_PATH)
+        deleteFileIfExists(ENG_ADDRESS_ZIP_FILE_PATH)
+        deleteDirectoryIfExists(ENG_ADDRESS_ZIP_FILE_PATH)
         val (year, month) = getCurrentYearAndMonth()
         saveAddressService.execute(
             UnzipFile(
@@ -53,14 +53,14 @@ class SaveAddressScheduler(
         )
     }
 
-    private fun deleteIfExistsFile(deleteFilePath: String) {
-        Files.deleteIfExists(Paths.get(deleteFilePath))
+    private fun deleteFileIfExists(targetFilePath: String) {
+        Files.deleteIfExists(Paths.get(targetFilePath))
     }
 
-    private fun deleteIfExistsDirectory(deleteDirectoryPath: String) {
-        val isExistFile = File(deleteDirectoryPath).exists()
+    private fun deleteDirectoryIfExists(targetDirectoryPath: String) {
+        val isExistFile = File(targetDirectoryPath).exists()
         if (isExistFile) {
-            Files.walk(Paths.get(deleteDirectoryPath))
+            Files.walk(Paths.get(targetDirectoryPath))
                 .sorted(Comparator.reverseOrder())
                 .map(Path::toFile)
                 .forEach(File::delete)
