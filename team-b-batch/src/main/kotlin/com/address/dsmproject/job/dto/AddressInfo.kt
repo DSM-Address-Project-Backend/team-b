@@ -21,6 +21,7 @@ data class AddressInfo(
     val beobJeongLiEng: String,
     val mainAddressNumber: Int,
     val subAddressNumber: Int,
+    val streetNumber: String,
 )
 
 fun AddressInfo.toParcelNumberEntity() = ParcelNumberEntity(
@@ -54,5 +55,6 @@ fun AddressInfo.toRoadAddressEntity() = RoadAddressEntity(
     mainBuildingNumber = this.mainAddressNumber,
     subBuildingNumber = this.subAddressNumber,
     postalCode = this.postalCode,
-    buildingName = this.buildingName
+    buildingName = this.buildingName,
+    streetNumber = this.streetNumber,
 )
