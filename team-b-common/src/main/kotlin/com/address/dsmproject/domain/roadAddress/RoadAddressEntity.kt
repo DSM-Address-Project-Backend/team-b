@@ -23,4 +23,7 @@ class RoadAddressEntity(
 
     @Column(columnDefinition = "VARCHAR(40)", nullable = false)
     val buildingName: String,
+
+    @Column(columnDefinition = "VARCHAR(80)", nullable = false)
+    val streetNumber: String,
 ) : BaseUUIDEntity(id)
