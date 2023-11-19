@@ -36,6 +36,8 @@ class RoadNumberEntity(
     @Column(columnDefinition = "VARCHAR(40)", nullable = false)
     val beobJeongLiEng: String,
 
+    isRepresent: Boolean,
+
     @MapsId("parcelNumberId")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parcel_number_id")
@@ -45,7 +47,11 @@ class RoadNumberEntity(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "road_address_id")
     val roadAddressEntity: RoadAddressEntity,
-)
+) {
+    @Column(columnDefinition = "BIT(1)")
+    var isRepresent = isRepresent
+        protected set
+}
 
 @Embeddable
 data class RoadNumberId(
