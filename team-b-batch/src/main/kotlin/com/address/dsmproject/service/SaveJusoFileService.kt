@@ -17,7 +17,6 @@ class SaveJusoFileService(
             year = unzipTargetFile.year,
             month = unzipTargetFile.month
         )
-        val jusoFile = jusoUtil.downloadJusoFile(jusoParam)
-        fileUtil.writeFile(unzipTargetFile, jusoFile)
+        fileUtil.writeFile(unzipTargetFile, jusoUtil.downloadJusoFile(jusoParam))
     }
 }
