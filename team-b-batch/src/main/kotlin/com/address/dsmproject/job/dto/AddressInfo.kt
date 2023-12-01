@@ -62,7 +62,8 @@ fun AddressInfo.toRoadNumberEntity(
     eupMyeonDongEng = this.eupMyeonDongEng,
     beobJeongLiEng = this.beobJeongLiEng,
     parcelNumberEntity = parcelNumber,
-    roadAddressEntity = roadAddressEntity
+    roadAddressEntity = roadAddressEntity,
+    isRepresent = represents
 )
 
 fun AddressInfo.toRoadAddressEntity() = RoadAddressEntity(
