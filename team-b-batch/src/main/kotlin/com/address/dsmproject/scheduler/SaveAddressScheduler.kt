@@ -10,7 +10,6 @@ import com.address.dsmproject.util.JusoConstants.KOR_ADDRESS_FILE_PATH
 import com.address.dsmproject.util.JusoConstants.KOR_ADDRESS_ZIP_FILE_PATH
 import com.address.dsmproject.util.JusoConstants.KOR_LANGUAGE
 import com.address.dsmproject.util.targetYearAndMonth
-import org.springframework.batch.core.JobParameters
 import org.springframework.batch.core.JobParametersBuilder
 import org.springframework.batch.core.launch.JobLauncher
 import org.springframework.scheduling.annotation.Scheduled
@@ -43,6 +42,7 @@ class SaveAddressScheduler(
                 month = month,
             )
         )
+
         jobLauncher.run(
             saveJobConfiguration.saveJob(),
             JobParametersBuilder()
