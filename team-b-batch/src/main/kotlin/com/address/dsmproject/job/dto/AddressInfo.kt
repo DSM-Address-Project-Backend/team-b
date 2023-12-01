@@ -15,13 +15,28 @@ data class AddressInfo(
     val countyDistricts: String,
     val eupMyeonDong: String,
     val beobJeongLi: String,
-    val cityProvinceNameEng: String,
-    val countyDistrictsEng: String,
-    val eupMyeonDongEng: String,
-    val beobJeongLiEng: String,
+    var cityProvinceNameEng: String,
+    var countyDistrictsEng: String,
+    var eupMyeonDongEng: String,
+    var beobJeongLiEng: String,
     val mainAddressNumber: Int,
     val subAddressNumber: Int,
     val streetNumber: String,
+    var represents: Boolean
+) {
+    fun setEngInfo(cityProvinceNameEng: String, countyDistrictsEng: String,
+                   eupMyeonDongEng: String, beobJeongLiEng: String, represents: Boolean) {
+        this.cityProvinceNameEng = cityProvinceNameEng
+        this.countyDistrictsEng = countyDistrictsEng
+        this.eupMyeonDongEng = eupMyeonDongEng
+        this.beobJeongLiEng = beobJeongLiEng
+        this.represents = represents
+    }
+}
+
+data class AddressInfoId(
+    val beobJeongDongCode: String,
+    val roadNameCode: String
 )
 
 fun AddressInfo.toParcelNumberEntity() = ParcelNumberEntity(
