@@ -41,4 +41,31 @@ data class AddressInfo(
     val common: AddressCommonInfo,
     val road: AddressRoadInfo,
     val jibuns: MutableList<AddressJibunInfo>
-)
+) {
+    companion object {
+        fun build(split: List<String>): AddressInfo {
+            return AddressInfo(
+                common = AddressCommonInfo(
+                    cityProvinceName = split[2],
+                    countyDistricts = split[3],
+                    eupMyeonDong = split[4],
+                    beobJeongLi = split[5],
+                    postalCode = split[16],
+                    roadName = split[10]
+                ),
+                road = AddressRoadInfo(
+                    mainBuildingNumber = split[12],
+                    subBuildingNumber = split[13],
+                    buildingName = split[21]
+                ),
+                jibuns = mutableListOf(
+                    AddressJibunInfo(
+                        mainJibunNumber = split[7].toInt(),
+                        subJibunNumber = split[9].toInt(),
+                        represents = true
+                    )
+                )
+            )
+        }
+    }
+}

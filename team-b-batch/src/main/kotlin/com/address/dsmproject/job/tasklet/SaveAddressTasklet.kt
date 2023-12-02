@@ -3,10 +3,8 @@ package com.address.dsmproject.job.tasklet
 import com.address.dsmproject.domain.parcelNumber.ParcelNumberRepository
 import com.address.dsmproject.domain.roadAddress.RoadAddressRepository
 import com.address.dsmproject.domain.roadNumber.RoadNumberRepository
-import com.address.dsmproject.job.dto.AddressCommonInfo
 import com.address.dsmproject.job.dto.AddressInfo
 import com.address.dsmproject.job.dto.AddressJibunInfo
-import com.address.dsmproject.job.dto.AddressRoadInfo
 import com.address.dsmproject.util.JusoConstants.RoadAddress.ENG_FILE_PATH
 import com.address.dsmproject.util.JusoConstants.RoadAddress.KOR_FILE_PATH
 import org.springframework.batch.core.StepContribution
@@ -28,13 +26,19 @@ class SaveAddressTasklet(
     override fun execute(contribution: StepContribution, chunkContext: ChunkContext): RepeatStatus {
         val korAddressFile = File(KOR_FILE_PATH)
         korAddressFile.walk().forEach {
-            if (PatternMatchUtils.simpleMatch("${KOR_FILE_PATH}/rnaddrkor*.txt", it.path))
-                saveKorAddressInfoFromFile(it.path)
+            if (PatternMatchUtils.simpleMatch(
+                    "${KOR_FILE_PATH}/rnaddrkor*.txt",
+                    it.path
+                )
+            ) saveKorAddressInfoFromFile(it.path)
         }
 
         korAddressFile.walk().forEach {
-            if (PatternMatchUtils.simpleMatch("${KOR_FILE_PATH}/jibun_rnaddrkor*.txt", it.path))
-                saveKorJibunInfoFromFile(it.path)
+            if (PatternMatchUtils.simpleMatch(
+                    "${KOR_FILE_PATH}/jibun_rnaddrkor*.txt",
+                    it.path
+                )
+            ) saveKorJibunInfoFromFile(it.path)
         }
 
         val engAddressFile = File(ENG_FILE_PATH)
@@ -52,29 +56,7 @@ class SaveAddressTasklet(
     private fun saveKorAddressInfoFromFile(path: String) {
         return File(path).readLines(Charset.forName("euc-kr")).forEach {
             val split = it.split("|")
-            result[split[0]] =
-                AddressInfo(
-                    common = AddressCommonInfo(
-                        cityProvinceName = split[2],
-                        countyDistricts = split[3],
-                        eupMyeonDong = split[4],
-                        beobJeongLi = split[5],
-                        postalCode = split[16],
-                        roadName = split[10]
-                    ),
-                    road = AddressRoadInfo(
-                        mainBuildingNumber = split[12],
-                        subBuildingNumber = split[13],
-                        buildingName = split[21]
-                    ),
-                    jibuns = mutableListOf(
-                        AddressJibunInfo(
-                            mainJibunNumber = split[7].toInt(),
-                            subJibunNumber = split[9].toInt(),
-                            represents = true
-                        )
-                    )
-                )
+            result[split[0]] = AddressInfo.build(split)
         }
     }
 
@@ -83,9 +65,7 @@ class SaveAddressTasklet(
             val split = it.split("|")
             result[split[0]]?.jibuns?.add(
                 AddressJibunInfo(
-                    mainJibunNumber = split[7].toInt(),
-                    subJibunNumber = split[8].toInt(),
-                    represents = false
+                    mainJibunNumber = split[7].toInt(), subJibunNumber = split[8].toInt(), represents = false
                 )
             )
         }
