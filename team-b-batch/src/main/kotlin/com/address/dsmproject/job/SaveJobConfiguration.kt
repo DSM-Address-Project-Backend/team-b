@@ -22,8 +22,10 @@ class SaveJobConfiguration(
     private val roadAddressRepository: RoadAddressRepository,
     private val roadNumberRepository: RoadNumberRepository,
 ) {
-    private val JOB_NAME = "saveJob"
-    private val STEP_NAME =  "saveAddressStep"
+    companion object {
+        const val JOB_NAME = "saveJob"
+        const val STEP_NAME =  "saveAddressStep"
+    }
 
     @Bean
     fun saveJob(): Job {
