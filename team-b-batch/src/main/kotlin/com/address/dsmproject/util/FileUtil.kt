@@ -20,6 +20,7 @@ class FileUtil {
         unzipTargetDirectory.mkdir()
 
         unzip(zipFile, unzipTargetDirectory)
+        zipFile.delete()
     }
 
     private fun unzip(zipFile: File, unzipFileTargetDirectory: File) {

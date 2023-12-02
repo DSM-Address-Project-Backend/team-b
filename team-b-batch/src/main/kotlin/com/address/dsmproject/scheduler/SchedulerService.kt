@@ -23,8 +23,6 @@ class SaveAddressScheduler(
     }
 
     private fun saveKorRoadNameAddress() {
-        deleteFileIfExists(RoadAddress.KOR_ZIP_FILE_PATH)
-        deleteDirectoryIfExists(RoadAddress.KOR_FILE_PATH)
         val (year, month) = targetYearAndMonth()
         saveJusoFileService.execute(
             UnzipTargetFile(
@@ -38,8 +36,6 @@ class SaveAddressScheduler(
     }
 
     private fun saveEngRoadNameAddress() {
-        deleteFileIfExists(RoadAddress.ENG_ZIP_FILE_PATH)
-        deleteDirectoryIfExists(RoadAddress.ENG_FILE_PATH)
         val (year, month) = targetYearAndMonth()
         saveJusoFileService.execute(
             UnzipTargetFile(
@@ -50,19 +46,5 @@ class SaveAddressScheduler(
                 month = month,
             )
         )
-    }
-
-    private fun deleteFileIfExists(targetFilePath: String) {
-        Files.deleteIfExists(Paths.get(targetFilePath))
-    }
-
-    private fun deleteDirectoryIfExists(targetDirectoryPath: String) {
-        val isExistFile = File(targetDirectoryPath).exists()
-        if (isExistFile) {
-            Files.walk(Paths.get(targetDirectoryPath))
-                .sorted(Comparator.reverseOrder())
-                .map(Path::toFile)
-                .forEach(File::delete)
-        }
     }
 }
