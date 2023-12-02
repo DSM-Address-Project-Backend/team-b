@@ -5,11 +5,11 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 
-@FeignClient(name = "AddressClient", url = "\${address.url}")
-interface AddressClient {
+@FeignClient(name = "JusoClient", url = "\${address.url}")
+interface JusoClient {
 
     @GetMapping("/addrlink/download.do")
-    fun getAddressInfo(
+    fun downloadJusoFile(
         @RequestParam("reqType") reqType: String,
         @RequestParam("regYmd") yyyy: String,
         @RequestParam("ctprvnCd") ctprvnCd: String,

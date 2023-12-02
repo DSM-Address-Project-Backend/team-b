@@ -1,6 +1,7 @@
 package com.address.dsmproject.dto
 
-data class AddressInfoParam(
+data class JusoParam(
+    val language: String,
     val year: String,
     val month: String,
     val yyMMZip: String,
