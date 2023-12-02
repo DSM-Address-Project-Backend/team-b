@@ -17,7 +17,6 @@ class SaveAddressScheduler(
     private val jobLauncher: JobLauncher,
     private val saveJobConfiguration: SaveJobConfiguration
 ) {
-    private var a = 0
 
     @Scheduled(cron = "0 0 0 1 * * ") // 매달 1일 0시 실행
     fun saveRoadAddressScheduler() {
