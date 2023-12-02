@@ -26,12 +26,14 @@ class SaveAddressTasklet(
     private val result: MutableMap<AddressInfoId, AddressInfo> = HashMap()
 
     override fun execute(contribution: StepContribution, chunkContext: ChunkContext): RepeatStatus {
-        File(KOR_ADDRESS_FILE_PATH).walk().forEach {
+        val korAddressFile = File(KOR_ADDRESS_FILE_PATH)
+        korAddressFile.walk().forEach {
             if (PatternMatchUtils.simpleMatch("${KOR_ADDRESS_FILE_PATH}/rnaddrkor*.txt", it.path))
                 saveAddressInfoFromFile(it.path)
         }
 
-        File(ENG_ADDRESS_FILE_PATH).walk().forEach {
+        val engAddressFile = File(ENG_ADDRESS_FILE_PATH)
+        engAddressFile.walk().forEach {
             if (PatternMatchUtils.simpleMatch("${ENG_ADDRESS_FILE_PATH}/*.txt", it.path)) {
                 File(it.path).readLines(Charset.forName("euc-kr")).forEach { line ->
                     val split = line.split('|')
@@ -48,6 +50,9 @@ class SaveAddressTasklet(
         }
 
         saveAddressInfoEntity()
+        korAddressFile.deleteRecursively()
+        engAddressFile.deleteRecursively()
+
         return RepeatStatus.FINISHED
     }
 
