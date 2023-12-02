@@ -34,7 +34,7 @@ class SaveAddressTasklet(
 
         korAddressFile.walk().forEach {
             if (PatternMatchUtils.simpleMatch("${KOR_FILE_PATH}/jibun_rnaddrkor*.txt", it.path))
-                saveKorAddressInfoFromFile(it.path)
+                saveKorJibunInfoFromFile(it.path)
         }
 
         val engAddressFile = File(ENG_FILE_PATH)
