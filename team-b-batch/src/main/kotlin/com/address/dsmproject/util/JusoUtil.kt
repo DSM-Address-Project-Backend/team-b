@@ -3,7 +3,6 @@ package com.address.dsmproject.util
 import com.address.dsmproject.dto.JusoParam
 import com.address.dsmproject.feign.JusoClient
 import com.address.dsmproject.util.JusoConstants.Common
-import com.address.dsmproject.util.JusoConstants.EnglishAddress
 import com.address.dsmproject.util.JusoConstants.RoadAddress
 import org.springframework.stereotype.Component
 
@@ -39,12 +38,7 @@ class JusoUtil(
 
             RoadAddress.ENG_LANGUAGE -> {
                 fileName = yyyyMM + RoadAddress.ENG_ZIP_NAME
-                realFileName = RoadAddress.ENG_REAL_FILE_NAME + yyMMZip
-            }
-
-            EnglishAddress.ENG_LANGUAGE -> {
-                fileName = yyyyMM + EnglishAddress.ZIP_NAME
-                realFileName = yyyyMM + EnglishAddress.REAL_FILE_NAME
+                realFileName = yyyyMM + RoadAddress.ENG_REAL_FILE_NAME
             }
         }
 

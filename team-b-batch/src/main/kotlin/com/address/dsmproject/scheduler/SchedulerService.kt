@@ -2,7 +2,6 @@ package com.address.dsmproject.scheduler
 
 import com.address.dsmproject.dto.UnzipTargetFile
 import com.address.dsmproject.service.SaveJusoFileService
-import com.address.dsmproject.util.JusoConstants.EnglishAddress
 import com.address.dsmproject.util.JusoConstants.RoadAddress
 import com.address.dsmproject.util.targetYearAndMonth
 import org.springframework.scheduling.annotation.Scheduled
@@ -18,7 +17,12 @@ class SaveAddressScheduler(
 ) {
 
     @Scheduled(cron = "0 0 0 1 * * ") // 매달 1일 0시 실행
-    fun saveKoreaRoadAddressScheduler() {
+    fun saveRoadAddressScheduler() {
+        saveKorRoadNameAddress()
+        saveEngRoadNameAddress()
+    }
+
+    private fun saveKorRoadNameAddress() {
         deleteFileIfExists(RoadAddress.KOR_FILE_PATH)
         deleteDirectoryIfExists(RoadAddress.KOR_ZIP_FILE_PATH)
         val (year, month) = targetYearAndMonth()
@@ -33,8 +37,7 @@ class SaveAddressScheduler(
         )
     }
 
-    @Scheduled(cron = "0 0 0 1 * * ") // 매달 1일 0시 실행
-    fun saveEnglishRoadAddressScheduler() {
+    private fun saveEngRoadNameAddress() {
         deleteFileIfExists(RoadAddress.ENG_FILE_PATH)
         deleteDirectoryIfExists(RoadAddress.ENG_ZIP_FILE_PATH)
         val (year, month) = targetYearAndMonth()
@@ -43,22 +46,6 @@ class SaveAddressScheduler(
                 reqType = RoadAddress.ENG_LANGUAGE,
                 zipFilePath = RoadAddress.ENG_ZIP_FILE_PATH,
                 unzipTargetDirectoryPath = RoadAddress.ENG_FILE_PATH,
-                year = year,
-                month = month,
-            )
-        )
-    }
-
-    @Scheduled(cron = "0 0 0 1 * * ") // 매달 1일 0시 실행
-    fun saveEnglishAddressScheduler() {
-        deleteFileIfExists(EnglishAddress.FILE_PATH)
-        deleteDirectoryIfExists(EnglishAddress.ZIP_FILE_PATH)
-        val (year, month) = targetYearAndMonth()
-        saveJusoFileService.execute(
-            UnzipTargetFile(
-                reqType = EnglishAddress.ENG_LANGUAGE,
-                zipFilePath = EnglishAddress.ZIP_FILE_PATH,
-                unzipTargetDirectoryPath = EnglishAddress.FILE_PATH,
                 year = year,
                 month = month,
             )
