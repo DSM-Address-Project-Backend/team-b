@@ -1,76 +1,44 @@
 package com.address.dsmproject.job.dto
 
-import com.address.dsmproject.domain.parcelNumber.ParcelNumberEntity
-import com.address.dsmproject.domain.roadAddress.RoadAddressEntity
-import com.address.dsmproject.domain.roadNumber.RoadNumberEntity
-import com.address.dsmproject.domain.roadNumber.RoadNumberId
-import java.util.UUID
-
-data class AddressInfo(
-    val mainBuildingNumber: String,
-    val subBuildingNumber: String,
-    val postalCode: Int,
-    val buildingName: String,
+data class AddressCommonInfo(
     val cityProvinceName: String,
     val countyDistricts: String,
     val eupMyeonDong: String,
     val beobJeongLi: String,
-    var cityProvinceNameEng: String,
-    var countyDistrictsEng: String,
-    var eupMyeonDongEng: String,
-    var beobJeongLiEng: String,
-    val mainAddressNumber: Int,
-    val subAddressNumber: Int,
-    val streetNumber: String,
-    var represents: Boolean
+    val postalCode: String,
+    val roadName: String,
+    var cityProvinceNameEng: String? = "",
+    var countyDistrictsEng: String? = "",
+    var eupMyeonDongEng: String? = "",
+    var beobJeongLiEng: String? = "",
+    var roadNameEng: String? = ""
 ) {
-    fun setEngInfo(cityProvinceNameEng: String, countyDistrictsEng: String,
-                   eupMyeonDongEng: String, beobJeongLiEng: String, represents: Boolean) {
+    fun updateEngInfo(
+        cityProvinceNameEng: String, countyDistrictsEng: String,
+        eupMyeonDongEng: String, beobJeongLiEng: String, roadNameEng: String
+    ) {
         this.cityProvinceNameEng = cityProvinceNameEng
         this.countyDistrictsEng = countyDistrictsEng
         this.eupMyeonDongEng = eupMyeonDongEng
         this.beobJeongLiEng = beobJeongLiEng
-        this.represents = represents
+        this.roadNameEng = roadNameEng
     }
 }
 
-data class AddressInfoId(
-    val beobJeongDongCode: String,
-    val roadNameCode: String
+data class AddressRoadInfo(
+    val mainBuildingNumber: String,
+    val subBuildingNumber: String,
+    val buildingName: String,
 )
 
-fun AddressInfo.toParcelNumberEntity() = ParcelNumberEntity(
-    id = UUID.randomUUID(),
-    mainAddressNumber = this.mainAddressNumber,
-    subAddressNumber = this.subAddressNumber
+data class AddressJibunInfo(
+    val mainJibunNumber: Int,
+    val subJibunNumber: Int,
+    val represents: Boolean
 )
 
-fun AddressInfo.toRoadNumberEntity(
-    parcelNumber: ParcelNumberEntity,
-    roadAddressEntity: RoadAddressEntity,
-) = RoadNumberEntity(
-    roadNumberId = RoadNumberId(
-        parcelNumberId = parcelNumber.id,
-        roadAddressId = roadAddressEntity.id
-    ),
-    cityProvinceName = this.cityProvinceName,
-    countyDistricts = this.countyDistricts,
-    eupMyeonDong = this.eupMyeonDong,
-    beobJeongLi = this.beobJeongLi,
-    cityProvinceNameEng = this.cityProvinceNameEng,
-    countyDistrictsEng = this.countyDistrictsEng,
-    eupMyeonDongEng = this.eupMyeonDongEng,
-    beobJeongLiEng = this.beobJeongLiEng,
-    parcelNumberEntity = parcelNumber,
-    roadAddressEntity = roadAddressEntity,
-    isRepresent = represents
-)
-
-fun AddressInfo.toRoadAddressEntity() = RoadAddressEntity(
-    id = UUID.randomUUID(),
-    mainBuildingNumber = this.mainAddressNumber,
-    subBuildingNumber = this.subAddressNumber,
-    postalCode = this.postalCode,
-    buildingName = this.buildingName,
-    streetNumber = this.streetNumber,
+data class AddressInfo(
+    val common: AddressCommonInfo,
+    val road: AddressRoadInfo,
+    val jibuns: MutableList<AddressJibunInfo>
 )

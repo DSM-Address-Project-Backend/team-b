@@ -1,25 +1,33 @@
 package com.address.dsmproject.scheduler
 
 import com.address.dsmproject.dto.UnzipTargetFile
+import com.address.dsmproject.job.SaveJobConfiguration
 import com.address.dsmproject.service.SaveJusoFileService
 import com.address.dsmproject.util.JusoConstants.RoadAddress
 import com.address.dsmproject.util.targetYearAndMonth
+import org.springframework.batch.core.JobParametersBuilder
+import org.springframework.batch.core.launch.JobLauncher
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.Paths
+import java.util.*
 
 @Component
 class SaveAddressScheduler(
     private val saveJusoFileService: SaveJusoFileService,
+    private val jobLauncher: JobLauncher,
+    private val saveJobConfiguration: SaveJobConfiguration
 ) {
+    private var a = 0
 
     @Scheduled(cron = "0 0 0 1 * * ") // 매달 1일 0시 실행
     fun saveRoadAddressScheduler() {
         saveKorRoadNameAddress()
         saveEngRoadNameAddress()
+
+        jobLauncher.run(
+            saveJobConfiguration.saveJob(),
+            JobParametersBuilder().addString("saveAddress", UUID.randomUUID().toString()).toJobParameters()
+        )
     }
 
     private fun saveKorRoadNameAddress() {

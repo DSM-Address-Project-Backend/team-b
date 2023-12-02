@@ -1,14 +1,14 @@
 package com.address.dsmproject.job.tasklet
 
-import com.address.dsmproject.domain.parcelNumber.ParcelNumberEntity
 import com.address.dsmproject.domain.parcelNumber.ParcelNumberRepository
-import com.address.dsmproject.domain.roadAddress.RoadAddressEntity
 import com.address.dsmproject.domain.roadAddress.RoadAddressRepository
-import com.address.dsmproject.domain.roadNumber.RoadNumberEntity
 import com.address.dsmproject.domain.roadNumber.RoadNumberRepository
-import com.address.dsmproject.job.dto.*
-import com.address.dsmproject.util.JusoConstants.ENG_ADDRESS_FILE_PATH
-import com.address.dsmproject.util.JusoConstants.KOR_ADDRESS_FILE_PATH
+import com.address.dsmproject.job.dto.AddressCommonInfo
+import com.address.dsmproject.job.dto.AddressInfo
+import com.address.dsmproject.job.dto.AddressJibunInfo
+import com.address.dsmproject.job.dto.AddressRoadInfo
+import com.address.dsmproject.util.JusoConstants.RoadAddress.ENG_FILE_PATH
+import com.address.dsmproject.util.JusoConstants.RoadAddress.KOR_FILE_PATH
 import org.springframework.batch.core.StepContribution
 import org.springframework.batch.core.StepExecutionListener
 import org.springframework.batch.core.scope.context.ChunkContext
@@ -23,80 +23,84 @@ class SaveAddressTasklet(
     private val roadAddressRepository: RoadAddressRepository,
     private val roadNumberRepository: RoadNumberRepository
 ) : Tasklet, StepExecutionListener {
-    private val result: MutableMap<AddressInfoId, AddressInfo> = HashMap()
+    private val result: MutableMap<String, AddressInfo> = HashMap()
 
     override fun execute(contribution: StepContribution, chunkContext: ChunkContext): RepeatStatus {
-        val korAddressFile = File(KOR_ADDRESS_FILE_PATH)
+        val korAddressFile = File(KOR_FILE_PATH)
         korAddressFile.walk().forEach {
-            if (PatternMatchUtils.simpleMatch("${KOR_ADDRESS_FILE_PATH}/rnaddrkor*.txt", it.path))
-                saveAddressInfoFromFile(it.path)
+            if (PatternMatchUtils.simpleMatch("${KOR_FILE_PATH}/rnaddrkor*.txt", it.path))
+                saveKorAddressInfoFromFile(it.path)
         }
 
-        val engAddressFile = File(ENG_ADDRESS_FILE_PATH)
+        korAddressFile.walk().forEach {
+            if (PatternMatchUtils.simpleMatch("${KOR_FILE_PATH}/jibun_rnaddrkor*.txt", it.path))
+                saveKorAddressInfoFromFile(it.path)
+        }
+
+        val engAddressFile = File(ENG_FILE_PATH)
         engAddressFile.walk().forEach {
-            if (PatternMatchUtils.simpleMatch("${ENG_ADDRESS_FILE_PATH}/*.txt", it.path)) {
-                File(it.path).readLines(Charset.forName("euc-kr")).forEach { line ->
-                    val split = line.split('|')
-                    val addressInfo = result[AddressInfoId(split[0], split[8])]
-                    addressInfo?.setEngInfo(
-                        cityProvinceNameEng = split[1],
-                        countyDistrictsEng = split[2],
-                        eupMyeonDongEng = split[3],
-                        beobJeongLiEng = split[4],
-                        represents = split[17].toBoolean()
-                    )
-                }
+            if (PatternMatchUtils.simpleMatch("${ENG_FILE_PATH}/*.txt", it.path)) {
+                saveEngAddressInfoFromFile(it.path)
             }
         }
 
-        saveAddressInfoEntity()
-        korAddressFile.deleteRecursively()
-        engAddressFile.deleteRecursively()
+        // TODO: save 추가
 
         return RepeatStatus.FINISHED
     }
 
-    private fun saveAddressInfoFromFile(path: String) {
+    private fun saveKorAddressInfoFromFile(path: String) {
         return File(path).readLines(Charset.forName("euc-kr")).forEach {
             val split = it.split("|")
-            result[AddressInfoId(split[1], split[9])] = AddressInfo(
-                cityProvinceName = split[2],
-                countyDistricts = split[3],
-                eupMyeonDong = split[4],
-                beobJeongLi = split[5],
-                mainAddressNumber = split[7].toInt(),
-                subAddressNumber = split[8].toInt(),
-                buildingName = split[22],
-                mainBuildingNumber = split[12],
-                subBuildingNumber = split[13],
-                postalCode = split[16].toInt(),
-                countyDistrictsEng = "",
-                cityProvinceNameEng = "",
-                beobJeongLiEng = "",
-                eupMyeonDongEng = "",
-                streetNumber = split[10],
-                represents = false
+            result[split[0]] =
+                AddressInfo(
+                    common = AddressCommonInfo(
+                        cityProvinceName = split[2],
+                        countyDistricts = split[3],
+                        eupMyeonDong = split[4],
+                        beobJeongLi = split[5],
+                        postalCode = split[16],
+                        roadName = split[10]
+                    ),
+                    road = AddressRoadInfo(
+                        mainBuildingNumber = split[12],
+                        subBuildingNumber = split[13],
+                        buildingName = split[21]
+                    ),
+                    jibuns = mutableListOf(
+                        AddressJibunInfo(
+                            mainJibunNumber = split[7].toInt(),
+                            subJibunNumber = split[9].toInt(),
+                            represents = true
+                        )
+                    )
+                )
+        }
+    }
+
+    private fun saveKorJibunInfoFromFile(path: String) {
+        return File(path).readLines(Charset.forName("euc-kr")).forEach {
+            val split = it.split("|")
+            result[split[0]]?.jibuns?.add(
+                AddressJibunInfo(
+                    mainJibunNumber = split[7].toInt(),
+                    subJibunNumber = split[8].toInt(),
+                    represents = false
+                )
             )
         }
     }
 
-    private fun saveAddressInfoEntity() {
-        val parcelNumbers: MutableList<ParcelNumberEntity> = ArrayList()
-        val roadAddresses: MutableList<RoadAddressEntity> = ArrayList()
-        val roadNumbers: MutableList<RoadNumberEntity> = ArrayList()
-        result.forEach {
-            val addressInfo = it.value
-            val parcelNumber = addressInfo.toParcelNumberEntity()
-            val roadAddress = addressInfo.toRoadAddressEntity()
-            val roadNumber = addressInfo.toRoadNumberEntity(parcelNumber, roadAddress)
-
-            parcelNumbers.add(parcelNumber)
-            roadAddresses.add(roadAddress)
-            roadNumbers.add(roadNumber)
+    private fun saveEngAddressInfoFromFile(path: String) {
+        File(path).readLines(Charset.forName("euc-kr")).forEach { line ->
+            val split = line.split('|')
+            result[split[0]]?.common?.updateEngInfo(
+                cityProvinceNameEng = split[2],
+                countyDistrictsEng = split[3],
+                eupMyeonDongEng = split[4],
+                beobJeongLiEng = split[5],
+                roadNameEng = split[7]
+            )
         }
-
-        parcelNumberRepository.saveAll(parcelNumbers)
-        roadAddressRepository.saveAll(roadAddresses)
-        roadNumberRepository.saveAll(roadNumbers)
     }
 }
