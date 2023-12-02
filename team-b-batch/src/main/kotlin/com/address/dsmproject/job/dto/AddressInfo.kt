@@ -61,7 +61,7 @@ data class AddressInfo(
                 jibuns = mutableListOf(
                     AddressJibunInfo(
                         mainJibunNumber = split[7].toInt(),
-                        subJibunNumber = split[9].toInt(),
+                        subJibunNumber = split[8].toInt(),
                         represents = true
                     )
                 )
