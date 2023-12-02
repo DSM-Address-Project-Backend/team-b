@@ -54,14 +54,14 @@ class SaveAddressTasklet(
     }
 
     private fun saveKorAddressInfoFromFile(path: String) {
-        return File(path).readLines(Charset.forName("euc-kr")).forEach {
+        File(path).readLines(Charset.forName("euc-kr")).forEach {
             val split = it.split("|")
             result[split[0]] = AddressInfo.build(split)
         }
     }
 
     private fun saveKorJibunInfoFromFile(path: String) {
-        return File(path).readLines(Charset.forName("euc-kr")).forEach {
+        File(path).readLines(Charset.forName("euc-kr")).forEach {
             val split = it.split("|")
             result[split[0]]?.jibuns?.add(
                 AddressJibunInfo(

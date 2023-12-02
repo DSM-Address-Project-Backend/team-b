@@ -22,10 +22,12 @@ class SaveJobConfiguration(
     private val roadAddressRepository: RoadAddressRepository,
     private val roadNumberRepository: RoadNumberRepository,
 ) {
+    private val JOB_NAME = "saveJob"
+    private val STEP_NAME =  "saveAddressStep"
 
     @Bean
     fun saveJob(): Job {
-        return JobBuilder("saveJob", jobRepository)
+        return JobBuilder(JOB_NAME, jobRepository)
             .start(saveStep())
             .build()
     }
@@ -33,7 +35,7 @@ class SaveJobConfiguration(
     @Bean
     @JobScope
     fun saveStep(): Step {
-        return StepBuilder("saveStep", jobRepository)
+        return StepBuilder(STEP_NAME, jobRepository)
             .tasklet(SaveAddressTasklet(parcelNumberRepository, roadAddressRepository, roadNumberRepository), transactionManager)
             .build()
     }
