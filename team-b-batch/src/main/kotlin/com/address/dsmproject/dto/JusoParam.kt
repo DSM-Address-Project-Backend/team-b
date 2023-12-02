@@ -8,9 +8,3 @@ data class JusoParam(
     val fileName: String,
     val realFileName: String,
 )
-
-data class CommonJusoParam(
-    val yyyy: String,
-    val mm: String,
-    val yyyyMM: String,
-)
