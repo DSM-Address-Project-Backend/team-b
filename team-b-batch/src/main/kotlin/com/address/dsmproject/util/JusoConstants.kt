@@ -18,9 +18,9 @@ object JusoConstants {
         const val KOR_LANGUAGE = "ALLRNADR_KOR"
         const val KOR_ZIP_FILE_PATH = "${RESOURCE_PATH}korRoadAddress.zip"
         const val KOR_FILE_PATH = "${RESOURCE_PATH}unzipKor"
-        const val ENG_ZIP_NAME = "_영문주소DB_전체분$ZIP"
-        const val ENG_REAL_FILE_NAME = "ALLENG00$ZIP"
-        const val ENG_LANGUAGE = "ALLENG"
+        const val ENG_ZIP_NAME = "_도로명주소 영어_전체분$ZIP"
+        const val ENG_REAL_FILE_NAME = "RN_ENG_"
+        const val ENG_LANGUAGE = "ALLRNADR_ENG"
         const val ENG_ZIP_FILE_PATH = "${RESOURCE_PATH}engRoadAddress.zip"
         const val ENG_FILE_PATH = "${RESOURCE_PATH}unzipEng"
     }
