@@ -37,3 +37,6 @@ out/
 .vscode/
 
 .DS_Store
+
+**/resources/unzipKor
+**/resources/unzipEng

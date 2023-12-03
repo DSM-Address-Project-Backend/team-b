@@ -38,7 +38,7 @@ class JusoUtil(
 
             RoadAddress.ENG_LANGUAGE -> {
                 fileName = yyyyMM + RoadAddress.ENG_ZIP_NAME
-                realFileName = yyyyMM + RoadAddress.ENG_REAL_FILE_NAME
+                realFileName = RoadAddress.ENG_REAL_FILE_NAME + yyMMZip
             }
         }
 
