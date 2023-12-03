@@ -1,8 +1,6 @@
 package com.address.dsmproject.job.tasklet
 
-import com.address.dsmproject.domain.parcelNumber.ParcelNumberRepository
-import com.address.dsmproject.domain.roadAddress.RoadAddressRepository
-import com.address.dsmproject.domain.roadNumber.RoadNumberRepository
+import com.address.dsmproject.job.dto.AddressEngInfo
 import com.address.dsmproject.job.dto.AddressInfo
 import com.address.dsmproject.job.dto.AddressJibunInfo
 import com.address.dsmproject.util.JusoConstants.RoadAddress.ENG_FILE_PATH
@@ -16,11 +14,7 @@ import org.springframework.util.PatternMatchUtils
 import java.io.File
 import java.nio.charset.Charset
 
-class SaveAddressTasklet(
-    private val parcelNumberRepository: ParcelNumberRepository,
-    private val roadAddressRepository: RoadAddressRepository,
-    private val roadNumberRepository: RoadNumberRepository
-) : Tasklet, StepExecutionListener {
+class SaveAddressTasklet : Tasklet, StepExecutionListener {
     private val result: MutableMap<String, AddressInfo> = HashMap()
 
     override fun execute(contribution: StepContribution, chunkContext: ChunkContext): RepeatStatus {
@@ -56,7 +50,7 @@ class SaveAddressTasklet(
     private fun saveKorAddressInfoFromFile(path: String) {
         File(path).readLines(Charset.forName("euc-kr")).forEach {
             val split = it.split("|")
-            result[split[0]] = AddressInfo.build(split)
+            result[split[0]] = AddressInfo.of(split)
         }
     }
 
@@ -65,7 +59,9 @@ class SaveAddressTasklet(
             val split = it.split("|")
             result[split[0]]?.jibuns?.add(
                 AddressJibunInfo(
-                    mainJibunNumber = split[7].toInt(), subJibunNumber = split[8].toInt(), represents = false
+                    mainJibunNumber = split[7].toInt(),
+                    subJibunNumber = split[8].toInt(),
+                    represents = false
                 )
             )
         }
@@ -74,7 +70,7 @@ class SaveAddressTasklet(
     private fun saveEngAddressInfoFromFile(path: String) {
         File(path).readLines(Charset.forName("euc-kr")).forEach { line ->
             val split = line.split('|')
-            result[split[0]]?.common?.updateEngInfo(
+            result[split[0]]?.common?.addressEngInfo = AddressEngInfo(
                 cityProvinceNameEng = split[2],
                 countyDistrictsEng = split[3],
                 eupMyeonDongEng = split[4],

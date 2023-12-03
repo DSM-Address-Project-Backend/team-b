@@ -9,8 +9,7 @@ import java.util.UUID
 @Entity
 @Table(name = "tbl_road_address")
 class RoadAddressEntity(
-
-    id: UUID,
+    override val id: UUID,
 
     @Column(columnDefinition = "INT", nullable = false)
     val mainBuildingNumber: Int,

@@ -10,7 +10,7 @@ import java.util.UUID
 @Table(name = "tbl_parcel_number")
 class ParcelNumberEntity(
 
-    id: UUID,
+    override val id: UUID,
 
     @Column(columnDefinition = "INT", nullable = false)
     val mainAddressNumber: Int,

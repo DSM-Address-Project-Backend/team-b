@@ -1,8 +1,5 @@
 package com.address.dsmproject.job
 
-import com.address.dsmproject.domain.parcelNumber.ParcelNumberRepository
-import com.address.dsmproject.domain.roadAddress.RoadAddressRepository
-import com.address.dsmproject.domain.roadNumber.RoadNumberRepository
 import com.address.dsmproject.job.tasklet.SaveAddressTasklet
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
@@ -18,13 +15,10 @@ import org.springframework.transaction.PlatformTransactionManager
 class SaveJobConfiguration(
     private val jobRepository: JobRepository,
     private val transactionManager: PlatformTransactionManager,
-    private val parcelNumberRepository: ParcelNumberRepository,
-    private val roadAddressRepository: RoadAddressRepository,
-    private val roadNumberRepository: RoadNumberRepository,
 ) {
     companion object {
         const val JOB_NAME = "saveJob"
-        const val STEP_NAME =  "saveAddressStep"
+        const val STEP_NAME = "saveAddressStep"
     }
 
     @Bean
@@ -38,7 +32,7 @@ class SaveJobConfiguration(
     @JobScope
     fun saveStep(): Step {
         return StepBuilder(STEP_NAME, jobRepository)
-            .tasklet(SaveAddressTasklet(parcelNumberRepository, roadAddressRepository, roadNumberRepository), transactionManager)
+            .tasklet(SaveAddressTasklet(), transactionManager)
             .build()
     }
 

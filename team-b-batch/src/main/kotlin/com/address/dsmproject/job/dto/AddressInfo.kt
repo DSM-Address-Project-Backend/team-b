@@ -1,5 +1,13 @@
 package com.address.dsmproject.job.dto
 
+
+data class AddressEngInfo(
+    var cityProvinceNameEng: String,
+    var countyDistrictsEng: String,
+    var eupMyeonDongEng: String,
+    var beobJeongLiEng: String,
+    var roadNameEng: String
+)
 data class AddressCommonInfo(
     val cityProvinceName: String,
     val countyDistricts: String,
@@ -7,23 +15,8 @@ data class AddressCommonInfo(
     val beobJeongLi: String,
     val postalCode: String,
     val roadName: String,
-    var cityProvinceNameEng: String? = "",
-    var countyDistrictsEng: String? = "",
-    var eupMyeonDongEng: String? = "",
-    var beobJeongLiEng: String? = "",
-    var roadNameEng: String? = ""
-) {
-    fun updateEngInfo(
-        cityProvinceNameEng: String, countyDistrictsEng: String,
-        eupMyeonDongEng: String, beobJeongLiEng: String, roadNameEng: String
-    ) {
-        this.cityProvinceNameEng = cityProvinceNameEng
-        this.countyDistrictsEng = countyDistrictsEng
-        this.eupMyeonDongEng = eupMyeonDongEng
-        this.beobJeongLiEng = beobJeongLiEng
-        this.roadNameEng = roadNameEng
-    }
-}
+    var addressEngInfo: AddressEngInfo? = null
+)
 
 data class AddressRoadInfo(
     val mainBuildingNumber: String,
@@ -43,7 +36,7 @@ data class AddressInfo(
     val jibuns: MutableList<AddressJibunInfo>
 ) {
     companion object {
-        fun build(split: List<String>): AddressInfo {
+        fun of(split: List<String>): AddressInfo {
             return AddressInfo(
                 common = AddressCommonInfo(
                     cityProvinceName = split[2],
