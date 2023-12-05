@@ -31,20 +31,25 @@ class SaveAddressTasklet(
 
     override fun execute(contribution: StepContribution, chunkContext: ChunkContext): RepeatStatus {
         val korAddressFile = File(KOR_FILE_PATH)
-        korAddressFile.walk().forEach { file ->
-            when {
-                PatternMatchUtils.simpleMatch(ROAD_ADDRESS_KOR_PATH, file.path) -> saveKorAddressInfoFromFile(file.path)
-                PatternMatchUtils.simpleMatch(JIBUN_KOR_PATH, file.path) -> saveKorJibunInfoFromFile(file.path)
+        korAddressFile.walk().forEach {
+            if (PatternMatchUtils.simpleMatch(ROAD_ADDRESS_KOR_PATH, it.path)) {
+                saveKorAddressInfoFromFile(it.path)
             }
         }
+
+        korAddressFile.walk().forEach {
+            if (PatternMatchUtils.simpleMatch(JIBUN_KOR_PATH, it.path)) {
+                saveKorJibunInfoFromFile(it.path)
+            }
+        }
+
         val engAddressFile = File(ENG_FILE_PATH)
-        engAddressFile.walk().forEach { file ->
-            when {
-                PatternMatchUtils.simpleMatch(ROAD_ADDRESS_ENG_PATH, file.path) -> {
-                    saveEngAddressInfoFromFile(file.path)
-                }
+        engAddressFile.walk().forEach {
+            if (PatternMatchUtils.simpleMatch(ROAD_ADDRESS_ENG_PATH, it.path)) {
+                saveEngAddressInfoFromFile(it.path)
             }
         }
+
 
         val roadNumberEntityList = listOf<RoadNumberEntity>()
         result.map { (key, addressInfo) -> roadNumberEntityList.plus(addressInfo.toRoadNumberEntity(key)) }
