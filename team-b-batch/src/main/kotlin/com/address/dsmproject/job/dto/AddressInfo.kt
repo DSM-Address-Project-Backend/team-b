@@ -34,10 +34,10 @@ data class AddressJibunInfo(
     val represents: Boolean
 )
 
-data class AddressInfo( // AddressInfo 하나당 도로명 하나, 지번 여러 개
-    val common: AddressCommonInfo, // 1개
-    val road: AddressRoadInfo, // 1개
-    val jibuns: MutableList<AddressJibunInfo> // 1 ~ N개
+data class AddressInfo(
+    val common: AddressCommonInfo,
+    val road: AddressRoadInfo,
+    val jibuns: MutableList<AddressJibunInfo>
 ) {
     companion object {
         fun of(split: List<String>) = AddressInfo(
