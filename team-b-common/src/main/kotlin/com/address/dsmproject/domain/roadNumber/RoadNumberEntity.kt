@@ -26,17 +26,17 @@ class RoadNumberEntity(
     @Column(columnDefinition = "VARCHAR(40)", nullable = false)
     val beobJeongLi: String,
 
-    @Column(columnDefinition = "VARCHAR(40)", nullable = false)
-    val cityProvinceNameEng: String,
+    @Column(columnDefinition = "VARCHAR(40)")
+    val cityProvinceNameEng: String?,
 
-    @Column(columnDefinition = "VARCHAR(40)", nullable = false)
-    val countyDistrictsEng: String,
+    @Column(columnDefinition = "VARCHAR(40)")
+    val countyDistrictsEng: String?,
 
-    @Column(columnDefinition = "VARCHAR(40)", nullable = false)
-    val eupMyeonDongEng: String,
+    @Column(columnDefinition = "VARCHAR(40)")
+    val eupMyeonDongEng: String?,
 
-    @Column(columnDefinition = "VARCHAR(40)", nullable = false)
-    val beobJeongLiEng: String,
+    @Column(columnDefinition = "VARCHAR(40)")
+    val beobJeongLiEng: String?,
 
     isRepresent: Boolean?,
 
