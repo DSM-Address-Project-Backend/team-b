@@ -65,35 +65,66 @@ data class AddressInfo(
     }
 }
 
-fun AddressInfo.toRoadNumberEntity(
-    isRepresent: Boolean,
-    mainJibunNumber: Int,
-    subJibunNumber: Int,
-    type: RoadNumberType,
-    korFullText: String,
-    engFullText: String,
-    managementNumber: String,
-) = RoadNumberEntity(
-    id = UUID.randomUUID(),
-    cityProvinceName = this.common.cityProvinceName,
-    countyDistricts = this.common.countyDistricts,
-    eupMyeonDong = this.common.eupMyeonDong,
-    beobJeongLi = this.common.beobJeongLi,
-    cityProvinceNameEng = this.common.addressEngInfo!!.cityProvinceNameEng,
-    countyDistrictsEng = this.common.addressEngInfo!!.countyDistrictsEng,
-    eupMyeonDongEng = this.common.addressEngInfo!!.eupMyeonDongEng,
-    beobJeongLiEng = this.common.addressEngInfo!!.beobJeongLiEng,
-    isRepresent = isRepresent,
-    mainBuildingNumber = this.road.mainBuildingNumber,
-    subBuildingNumber = this.road.subBuildingNumber,
-    postalCode = this.common.postalCode,
-    roadName = this.common.roadName,
-    roadNameEng = this.common.addressEngInfo!!.roadNameEng,
-    buildingName = this.road.buildingName,
-    mainJibunNumber = mainJibunNumber,
-    subJibunNumber = subJibunNumber,
-    type = type,
-    korFullText = korFullText,
-    engFullText = engFullText,
-    managementNumber = managementNumber,
-)
+fun AddressInfo.toRoadNumberEntity(managementNumber: String): List<RoadNumberEntity> {
+    val commonKorFullText =
+        this.common.cityProvinceName + this.common.countyDistricts + this.common.eupMyeonDong + this.common.beobJeongLi
+    val commonEngFullText =
+        this.common.addressEngInfo?.cityProvinceNameEng + this.common.addressEngInfo?.countyDistrictsEng + this.common.addressEngInfo?.eupMyeonDongEng + this.common.addressEngInfo?.beobJeongLiEng
+    val addressKorFullText =
+        commonKorFullText + this.road.mainBuildingNumber + this.road.subBuildingNumber + this.road.buildingName
+    val addressEngFullText =
+        commonEngFullText + this.road.mainBuildingNumber + this.road.subBuildingNumber + this.road.buildingName
+    return this.jibuns.map { jibun ->
+        val jibunKorFullText = commonKorFullText + jibun.mainJibunNumber + jibun.subJibunNumber
+        val jibunEngFullText = commonEngFullText + jibun.mainJibunNumber + jibun.subJibunNumber
+        RoadNumberEntity(
+            id = UUID.randomUUID(),
+            cityProvinceName = this.common.cityProvinceName,
+            countyDistricts = this.common.countyDistricts,
+            eupMyeonDong = this.common.eupMyeonDong,
+            beobJeongLi = this.common.beobJeongLi,
+            cityProvinceNameEng = this.common.addressEngInfo!!.cityProvinceNameEng,
+            countyDistrictsEng = this.common.addressEngInfo!!.countyDistrictsEng,
+            eupMyeonDongEng = this.common.addressEngInfo!!.eupMyeonDongEng,
+            beobJeongLiEng = this.common.addressEngInfo!!.beobJeongLiEng,
+            isRepresent = jibun.represents,
+            mainBuildingNumber = this.road.mainBuildingNumber,
+            subBuildingNumber = this.road.subBuildingNumber,
+            postalCode = this.common.postalCode,
+            roadName = this.common.roadName,
+            roadNameEng = this.common.addressEngInfo!!.roadNameEng,
+            buildingName = this.road.buildingName,
+            mainJibunNumber = jibun.mainJibunNumber,
+            subJibunNumber = jibun.subJibunNumber,
+            type = RoadNumberType.JIBUN,
+            korFullText = jibunKorFullText,
+            engFullText = jibunEngFullText,
+            managementNumber = managementNumber,
+        )
+    }.plus(
+        RoadNumberEntity(
+            id = UUID.randomUUID(),
+            cityProvinceName = this.common.cityProvinceName,
+            countyDistricts = this.common.countyDistricts,
+            eupMyeonDong = this.common.eupMyeonDong,
+            beobJeongLi = this.common.beobJeongLi,
+            cityProvinceNameEng = this.common.addressEngInfo!!.cityProvinceNameEng,
+            countyDistrictsEng = this.common.addressEngInfo!!.countyDistrictsEng,
+            eupMyeonDongEng = this.common.addressEngInfo!!.eupMyeonDongEng,
+            beobJeongLiEng = this.common.addressEngInfo!!.beobJeongLiEng,
+            isRepresent = false,
+            mainBuildingNumber = this.road.mainBuildingNumber,
+            subBuildingNumber = this.road.subBuildingNumber,
+            postalCode = this.common.postalCode,
+            roadName = this.common.roadName,
+            roadNameEng = this.common.addressEngInfo!!.roadNameEng,
+            buildingName = this.road.buildingName,
+            mainJibunNumber = 0,
+            subJibunNumber = 0,
+            type = RoadNumberType.ROAD_NAME,
+            korFullText = addressKorFullText,
+            engFullText = addressEngFullText,
+            managementNumber = managementNumber,
+        )
+    )
+}
