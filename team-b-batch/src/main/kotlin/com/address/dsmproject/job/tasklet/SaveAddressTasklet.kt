@@ -34,12 +34,8 @@ class SaveAddressTasklet(
         val korAddressFile = File(KOR_FILE_PATH)
         korAddressFile.walk().forEach { file ->
             when {
-                PatternMatchUtils.simpleMatch(ROAD_ADDRESS_KOR_PATH, file.path) -> {
-                    saveKorAddressInfoFromFile(file.path)
-                }
-                PatternMatchUtils.simpleMatch(JIBUN_KOR_PATH, file.path) -> {
-                    saveKorJibunInfoFromFile(file.path)
-                }
+                PatternMatchUtils.simpleMatch(ROAD_ADDRESS_KOR_PATH, file.path) -> saveKorAddressInfoFromFile(file.path)
+                PatternMatchUtils.simpleMatch(JIBUN_KOR_PATH, file.path) -> saveKorJibunInfoFromFile(file.path)
             }
         }
         val engAddressFile = File(ENG_FILE_PATH)
