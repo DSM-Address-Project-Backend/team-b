@@ -2,7 +2,6 @@ package com.address.dsmproject.job.tasklet
 
 import com.address.dsmproject.domain.roadNumber.RoadNumberEntity
 import com.address.dsmproject.domain.roadNumber.RoadNumberRepository
-import com.address.dsmproject.domain.roadNumber.type.RoadNumberType
 import com.address.dsmproject.job.dto.AddressEngInfo
 import com.address.dsmproject.job.dto.AddressInfo
 import com.address.dsmproject.job.dto.AddressJibunInfo
@@ -48,39 +47,7 @@ class SaveAddressTasklet(
         }
 
         val roadNumberEntityList = listOf<RoadNumberEntity>()
-
-        result.map { (managementNumber, addressInfo) ->
-            val commonKorFullText = addressInfo.common.cityProvinceName + addressInfo.common.countyDistricts + addressInfo.common.eupMyeonDong + addressInfo.common.beobJeongLi
-            val commonEngFullText = addressInfo.common.addressEngInfo?.cityProvinceNameEng + addressInfo.common.addressEngInfo?.countyDistrictsEng + addressInfo.common.addressEngInfo?.eupMyeonDongEng + addressInfo.common.addressEngInfo?.beobJeongLiEng
-            val addressKorFullText = commonKorFullText + addressInfo.road.mainBuildingNumber + addressInfo.road.subBuildingNumber + addressInfo.road.buildingName
-            val addressEngFullText = commonEngFullText + addressInfo.road.mainBuildingNumber + addressInfo.road.subBuildingNumber + addressInfo.road.buildingName
-            roadNumberEntityList.plus(
-                addressInfo.jibuns.map { jibun ->
-                    val jibunKorFullText = commonKorFullText + jibun.mainJibunNumber + jibun.subJibunNumber
-                    val jibunEngFullText = commonEngFullText + jibun.mainJibunNumber + jibun.subJibunNumber
-                    addressInfo.toRoadNumberEntity(
-                        jibun.represents,
-                        jibun.mainJibunNumber,
-                        jibun.subJibunNumber,
-                        RoadNumberType.JIBUN,
-                        jibunKorFullText,
-                        jibunEngFullText,
-                        managementNumber,
-                    )
-                }.plus(
-                    addressInfo.toRoadNumberEntity(
-                        false,
-                        0,
-                        0,
-                        RoadNumberType.ROAD_NAME,
-                        addressKorFullText,
-                        addressEngFullText,
-                        managementNumber
-                    )
-                )
-            )
-        }
-
+        result.map { (key, addressInfo) -> roadNumberEntityList.plus(addressInfo.toRoadNumberEntity(key)) }
         roadNumberRepository.saveAll(roadNumberEntityList)
 
         return RepeatStatus.FINISHED
