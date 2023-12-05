@@ -49,10 +49,14 @@ class SaveAddressTasklet(
                 saveEngAddressInfoFromFile(it.path)
             }
         }
+        println(result.size)
+        roadNumberRepository.saveAll(
+            result.flatMap { (key, addressInfo) -> addressInfo.toRoadNumberEntity(key) }
+        )
 
 
         val roadNumberEntityList = listOf<RoadNumberEntity>()
-        result.map { (key, addressInfo) -> roadNumberEntityList.plus(addressInfo.toRoadNumberEntity(key)) }
+        result.flatMap { (key, addressInfo) -> roadNumberEntityList.plus(addressInfo.toRoadNumberEntity(key)) }
         roadNumberRepository.saveAll(roadNumberEntityList)
 
         return RepeatStatus.FINISHED

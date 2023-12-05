@@ -12,7 +12,7 @@ import java.util.UUID
 @Entity
 @Table(name = "tbl_road_number")
 class RoadNumberEntity(
-    override val id: UUID,
+    id: UUID? = null,
 
     @Column(columnDefinition = "VARCHAR(40)", nullable = false)
     val cityProvinceName: String,
@@ -38,13 +38,13 @@ class RoadNumberEntity(
     @Column(columnDefinition = "VARCHAR(40)")
     val beobJeongLiEng: String?,
 
-    isRepresent: Boolean?,
+    isRepresent: Boolean? = null,
 
     @Column(columnDefinition = "INT")
-    val mainBuildingNumber: Int?,
+    val mainBuildingNumber: Int? = null,
 
     @Column(columnDefinition = "INT")
-    val subBuildingNumber: Int?,
+    val subBuildingNumber: Int? = null,
 
     @Column(columnDefinition = "INT")
     val postalCode: Int?,
@@ -59,10 +59,10 @@ class RoadNumberEntity(
     val buildingName: String?,
 
     @Column(columnDefinition = "INT")
-    val mainJibunNumber: Int?,
+    val mainJibunNumber: Int? = null,
 
     @Column(columnDefinition = "INT")
-    val subJibunNumber: Int?,
+    val subJibunNumber: Int? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(9)", nullable = false)
