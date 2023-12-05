@@ -38,31 +38,31 @@ class RoadNumberEntity(
     @Column(columnDefinition = "VARCHAR(40)", nullable = false)
     val beobJeongLiEng: String,
 
-    isRepresent: Boolean,
+    isRepresent: Boolean?,
 
-    @Column(columnDefinition = "INT", nullable = false)
-    val mainBuildingNumber: Int,
+    @Column(columnDefinition = "INT")
+    val mainBuildingNumber: Int?,
 
-    @Column(columnDefinition = "INT", nullable = false)
-    val subBuildingNumber: Int,
+    @Column(columnDefinition = "INT")
+    val subBuildingNumber: Int?,
 
-    @Column(columnDefinition = "INT", nullable = false)
-    val postalCode: Int,
+    @Column(columnDefinition = "INT")
+    val postalCode: Int?,
 
-    @Column(columnDefinition = "VARCHAR(80)", nullable = false)
-    val roadName: String,
+    @Column(columnDefinition = "VARCHAR(80)")
+    val roadName: String?,
 
-    @Column(columnDefinition = "VARCHAR(100)", nullable = false)
-    val roadNameEng: String,
+    @Column(columnDefinition = "VARCHAR(100)")
+    val roadNameEng: String?,
 
-    @Column(columnDefinition = "VARCHAR(40)", nullable = false)
-    val buildingName: String,
+    @Column(columnDefinition = "VARCHAR(40)")
+    val buildingName: String?,
 
-    @Column(columnDefinition = "INT", nullable = false)
-    val mainJibunNumber: Int,
+    @Column(columnDefinition = "INT")
+    val mainJibunNumber: Int?,
 
-    @Column(columnDefinition = "INT", nullable = false)
-    val subJibunNumber: Int,
+    @Column(columnDefinition = "INT")
+    val subJibunNumber: Int?,
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(9)", nullable = false)
