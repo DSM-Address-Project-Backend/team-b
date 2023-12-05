@@ -1,6 +1,5 @@
 package com.address.dsmproject.job.tasklet
 
-import com.address.dsmproject.domain.roadNumber.RoadNumberEntity
 import com.address.dsmproject.domain.roadNumber.RoadNumberRepository
 import com.address.dsmproject.job.dto.AddressEngInfo
 import com.address.dsmproject.job.dto.AddressInfo
@@ -49,15 +48,10 @@ class SaveAddressTasklet(
                 saveEngAddressInfoFromFile(it.path)
             }
         }
-        println(result.size)
+
         roadNumberRepository.saveAll(
             result.flatMap { (key, addressInfo) -> addressInfo.toRoadNumberEntity(key) }
         )
-
-
-        val roadNumberEntityList = listOf<RoadNumberEntity>()
-        result.flatMap { (key, addressInfo) -> roadNumberEntityList.plus(addressInfo.toRoadNumberEntity(key)) }
-        roadNumberRepository.saveAll(roadNumberEntityList)
 
         return RepeatStatus.FINISHED
     }
