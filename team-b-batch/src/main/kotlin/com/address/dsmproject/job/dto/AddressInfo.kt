@@ -24,7 +24,7 @@ data class AddressCommonInfo(
 data class AddressRoadInfo(
     val mainBuildingNumber: Int,
     val subBuildingNumber: Int,
-    val buildingName: String,
+    val buildingName: String?,
 )
 
 data class AddressJibunInfo(
@@ -51,7 +51,7 @@ data class AddressInfo(
             road = AddressRoadInfo(
                 mainBuildingNumber = split[12].toInt(),
                 subBuildingNumber = split[13].toInt(),
-                buildingName = split[21]
+                buildingName = split[21] ?: split[22]
             ),
             jibuns = mutableListOf(
                 AddressJibunInfo(
