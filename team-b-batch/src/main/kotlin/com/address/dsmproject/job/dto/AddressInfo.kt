@@ -51,7 +51,7 @@ data class AddressInfo(
             road = AddressRoadInfo(
                 mainBuildingNumber = split[12].toInt(),
                 subBuildingNumber = split[13].toInt(),
-                buildingName = split[21] ?: split[22]
+                buildingName = if (split[21] == "") split[22] else split[21]
             ),
             jibuns = mutableListOf(
                 AddressJibunInfo(
