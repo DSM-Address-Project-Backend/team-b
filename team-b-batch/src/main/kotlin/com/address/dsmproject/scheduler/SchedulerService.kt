@@ -9,7 +9,7 @@ import org.springframework.batch.core.JobParametersBuilder
 import org.springframework.batch.core.launch.JobLauncher
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.UUID
 
 @Component
 class SaveAddressScheduler(
@@ -25,7 +25,8 @@ class SaveAddressScheduler(
 
         jobLauncher.run(
             saveJobConfiguration.saveJob(),
-            JobParametersBuilder().addString("saveAddress", UUID.randomUUID().toString()).toJobParameters()
+            JobParametersBuilder().addString(SaveJobConfiguration.JOB_NAME, UUID.randomUUID().toString())
+                .toJobParameters()
         )
     }
 
