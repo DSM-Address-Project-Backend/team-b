@@ -1,16 +1,18 @@
 package com.address.dsmproject.domain.roadNumber
 
-import com.address.dsmproject.domain.parcelNumber.ParcelNumberEntity
-import com.address.dsmproject.domain.roadAddress.RoadAddressEntity
-import jakarta.persistence.*
-import java.io.Serializable
+import com.address.dsmproject.domain.roadNumber.type.RoadNumberType
+import com.address.dsmproject.global.entity.BaseUUIDEntity
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.Table
 import java.util.UUID
 
 @Entity
 @Table(name = "tbl_road_number")
 class RoadNumberEntity(
-    @EmbeddedId
-    val roadNumberId: RoadNumberId,
+    override val id: UUID,
 
     @Column(columnDefinition = "VARCHAR(40)", nullable = false)
     val cityProvinceName: String,
@@ -38,26 +40,44 @@ class RoadNumberEntity(
 
     isRepresent: Boolean,
 
-    @MapsId("parcelNumberId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parcel_number_id")
-    val parcelNumberEntity: ParcelNumberEntity,
+    @Column(columnDefinition = "INT", nullable = false)
+    val mainBuildingNumber: Int,
 
-    @MapsId("roadAddressId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "road_address_id")
-    val roadAddressEntity: RoadAddressEntity,
-) {
+    @Column(columnDefinition = "INT", nullable = false)
+    val subBuildingNumber: Int,
+
+    @Column(columnDefinition = "INT", nullable = false)
+    val postalCode: Int,
+
+    @Column(columnDefinition = "VARCHAR(80)", nullable = false)
+    val roadName: String,
+
+    @Column(columnDefinition = "VARCHAR(100)", nullable = false)
+    val roadNameEng: String,
+
+    @Column(columnDefinition = "VARCHAR(40)", nullable = false)
+    val buildingName: String,
+
+    @Column(columnDefinition = "INT", nullable = false)
+    val mainJibunNumber: Int,
+
+    @Column(columnDefinition = "INT", nullable = false)
+    val subJibunNumber: Int,
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(9)", nullable = false)
+    val type: RoadNumberType,
+
+    @Column(columnDefinition = "VARCHAR(500)", nullable = false)
+    val korFullText: String,
+
+    @Column(columnDefinition = "VARCHAR(500)", nullable = false)
+    val engFullText: String,
+
+    @Column(columnDefinition = "CHAR(26)", nullable = false)
+    val managementNumber: String,
+) : BaseUUIDEntity() {
     @Column(columnDefinition = "BIT(1)")
     var isRepresent = isRepresent
         protected set
 }
-
-@Embeddable
-data class RoadNumberId(
-    @Column(columnDefinition = "BINARY(16)", nullable = false)
-    val parcelNumberId: UUID,
-
-    @Column(columnDefinition = "BINARY(16)", nullable = false)
-    val roadAddressId: UUID,
-) : Serializable
