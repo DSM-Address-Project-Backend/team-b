@@ -20,50 +20,70 @@ class SaveAddressTasklet(
     private val roadNumberRepository: RoadNumberRepository,
 ) : Tasklet, StepExecutionListener {
     companion object {
-        const val ROAD_ADDRESS_KOR_PATH = "$KOR_FILE_PATH/rnaddrkor*.txt"
-        const val JIBUN_KOR_PATH = "$KOR_FILE_PATH}/jibun_rnaddrkor*.txt"
-        const val ROAD_ADDRESS_ENG_PATH = "$ENG_FILE_PATH/*.txt"
+        const val ROAD_ADDRESS_KOR_PATH = "$KOR_FILE_PATH/rnaddrkor_"
+        const val JIBUN_KOR_PATH = "$KOR_FILE_PATH}/jibun_rnaddrkor_"
+        const val ROAD_ADDRESS_ENG_PATH = "$ENG_FILE_PATH/_"
         const val EUC_KR = "euc_kr"
+        val REGION_LIST = listOf(
+            "busan",
+            "chungbuk",
+            "chungnam",
+            "daegu",
+            "daejeon",
+            "gangwon",
+            "gwangju",
+            "gyeongbuk",
+            "gyeongnam",
+            "gyunggi",
+            "incheon",
+            "jeju",
+            "jeonbuk",
+            "jeonnam",
+            "sejong",
+            "seoul",
+            "ulsan",
+        )
     }
 
-    private val result: MutableMap<String, AddressInfo> = HashMap()
-
     override fun execute(contribution: StepContribution, chunkContext: ChunkContext): RepeatStatus {
-        val korAddressFile = File(KOR_FILE_PATH)
-        korAddressFile.walk().forEach {
-            if (PatternMatchUtils.simpleMatch(ROAD_ADDRESS_KOR_PATH, it.path)) {
-                saveKorAddressInfoFromFile(it.path)
+        for (region in REGION_LIST) {
+            val result: MutableMap<String, AddressInfo> = HashMap()
+            val korAddressFile = File(KOR_FILE_PATH)
+            korAddressFile.walk().forEach {
+                if (PatternMatchUtils.simpleMatch("$ROAD_ADDRESS_KOR_PATH$region.txt", it.path)) {
+                    saveKorAddressInfoFromFile(it.path, result)
+                }
             }
-        }
 
-        korAddressFile.walk().forEach {
-            if (PatternMatchUtils.simpleMatch(JIBUN_KOR_PATH, it.path)) {
-                saveKorJibunInfoFromFile(it.path)
+            korAddressFile.walk().forEach {
+                if (PatternMatchUtils.simpleMatch("$JIBUN_KOR_PATH$region.txt", it.path)) {
+                    saveKorJibunInfoFromFile(it.path, result)
+                }
             }
-        }
 
-        val engAddressFile = File(ENG_FILE_PATH)
-        engAddressFile.walk().forEach {
-            if (PatternMatchUtils.simpleMatch(ROAD_ADDRESS_ENG_PATH, it.path)) {
-                saveEngAddressInfoFromFile(it.path)
+            val engAddressFile = File(ENG_FILE_PATH)
+            engAddressFile.walk().forEach {
+                if (PatternMatchUtils.simpleMatch("$ROAD_ADDRESS_ENG_PATH$region.txt", it.path)) {
+                    saveEngAddressInfoFromFile(it.path, result)
+                }
             }
-        }
 
-        roadNumberRepository.saveAll(
-            result.flatMap { (key, addressInfo) -> addressInfo.toRoadNumberEntity(key) }
-        )
+            roadNumberRepository.saveAll(
+                result.flatMap { (management, addressInfo) -> addressInfo.toRoadNumberEntity(management) }
+            )
+        }
 
         return RepeatStatus.FINISHED
     }
 
-    private fun saveKorAddressInfoFromFile(path: String) {
+    private fun saveKorAddressInfoFromFile(path: String, result: MutableMap<String, AddressInfo>) {
         File(path).readLines(Charset.forName(EUC_KR)).forEach {
             val split = it.split("|")
             result[split[0]] = AddressInfo.of(split)
         }
     }
 
-    private fun saveKorJibunInfoFromFile(path: String) {
+    private fun saveKorJibunInfoFromFile(path: String, result: MutableMap<String, AddressInfo>) {
         File(path).readLines(Charset.forName(EUC_KR)).forEach {
             val split = it.split("|")
             result[split[0]]?.jibuns?.add(
@@ -76,7 +96,7 @@ class SaveAddressTasklet(
         }
     }
 
-    private fun saveEngAddressInfoFromFile(path: String) {
+    private fun saveEngAddressInfoFromFile(path: String, result: MutableMap<String, AddressInfo>) {
         File(path).readLines(Charset.forName(EUC_KR)).forEach { line ->
             val split = line.split('|')
             result[split[0]]?.common?.addressEngInfo = AddressEngInfo(
