@@ -54,13 +54,11 @@ class SaveAddressTasklet(
             korAddressFile.walk().forEach {
                 if (PatternMatchUtils.simpleMatch("$ROAD_ADDRESS_KOR_PATH$region$TXT", it.path)) {
                     saveKorAddressInfoFromFile(it.path)
-                    println("$ROAD_ADDRESS_KOR_PATH$region$TXT")
                 }
             }
 
             korAddressFile.walk().forEach {
                 if (PatternMatchUtils.simpleMatch("$JIBUN_KOR_PATH$region$TXT", it.path)) {
-                    println("$JIBUN_KOR_PATH$region$TXT")
                     saveKorJibunInfoFromFile(it.path)
                 }
             }
@@ -68,12 +66,9 @@ class SaveAddressTasklet(
             val engAddressFile = File(ENG_FILE_PATH)
             engAddressFile.walk().forEach {
                 if (PatternMatchUtils.simpleMatch("$ROAD_ADDRESS_ENG_PATH$region$TXT", it.path)) {
-                    println("$ROAD_ADDRESS_ENG_PATH$region$TXT")
                     saveEngAddressInfoFromFile(it.path)
                 }
             }
-
-            println(result)
 
             roadNumberRepository.saveAll(
                 result.flatMap { (management, addressInfo) -> addressInfo.toRoadNumberEntity(management) }
