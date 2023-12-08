@@ -76,6 +76,9 @@ class SaveAddressTasklet(
             )
             result.clear()
             entityManager.clear()
+
+            korAddressFile.deleteRecursively()
+            engAddressFile.deleteRecursively()
         }
 
         return RepeatStatus.FINISHED
