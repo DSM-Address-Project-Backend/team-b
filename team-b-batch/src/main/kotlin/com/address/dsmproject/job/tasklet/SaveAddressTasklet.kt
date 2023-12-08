@@ -25,49 +25,48 @@ class SaveAddressTasklet(
         const val ROAD_ADDRESS_KOR_PATH = "$KOR_FILE_PATH/rnaddrkor_"
         const val JIBUN_KOR_PATH = "$KOR_FILE_PATH/jibun_rnaddrkor_"
         const val ROAD_ADDRESS_ENG_PATH = "$ENG_FILE_PATH/rneng_"
-        const val TXT = ".txt"
         const val EUC_KR = "euc_kr"
         val REGION_LIST = listOf(
-            "busan",
-            "chungbuk",
-            "chungnam",
-            "daegu",
-            "daejeon",
-            "gangwon",
-            "gwangju",
-            "gyeongbuk",
-            "gyeongnam",
-            "gyunggi",
-            "incheon",
-            "jeju",
-            "jeonbuk",
-            "jeonnam",
-            "sejong",
-            "seoul",
-            "ulsan",
+            "busan.txt",
+            "chungbuk.txt",
+            "chungnam.txt",
+            "daegu.txt",
+            "daejeon.txt",
+            "gangwon.txt",
+            "gwangju.txt",
+            "gyeongbuk.txt",
+            "gyeongnam.txt",
+            "gyunggi.txt",
+            "incheon.txt",
+            "jeju.txt",
+            "jeonbuk.txt",
+            "jeonnam.txt",
+            "sejong.txt",
+            "seoul.txt",
+            "ulsan.txt",
         )
     }
 
     private val result: MutableMap<String, AddressInfo> = HashMap()
 
     override fun execute(contribution: StepContribution, chunkContext: ChunkContext): RepeatStatus {
+        val korAddressFile = File(KOR_FILE_PATH)
+        val engAddressFile = File(ENG_FILE_PATH)
         for (region in REGION_LIST) {
-            val korAddressFile = File(KOR_FILE_PATH)
             korAddressFile.walk().forEach {
-                if (PatternMatchUtils.simpleMatch("$ROAD_ADDRESS_KOR_PATH$region$TXT", it.path)) {
+                if (PatternMatchUtils.simpleMatch("$ROAD_ADDRESS_KOR_PATH$region", it.path)) {
                     saveKorAddressInfoFromFile(it.path)
                 }
             }
 
             korAddressFile.walk().forEach {
-                if (PatternMatchUtils.simpleMatch("$JIBUN_KOR_PATH$region$TXT", it.path)) {
+                if (PatternMatchUtils.simpleMatch("$JIBUN_KOR_PATH$region", it.path)) {
                     saveKorJibunInfoFromFile(it.path)
                 }
             }
 
-            val engAddressFile = File(ENG_FILE_PATH)
             engAddressFile.walk().forEach {
-                if (PatternMatchUtils.simpleMatch("$ROAD_ADDRESS_ENG_PATH$region$TXT", it.path)) {
+                if (PatternMatchUtils.simpleMatch("$ROAD_ADDRESS_ENG_PATH$region", it.path)) {
                     saveEngAddressInfoFromFile(it.path)
                 }
             }
@@ -75,6 +74,7 @@ class SaveAddressTasklet(
             roadNumberRepository.saveAllAndFlush(
                 result.flatMap { (management, addressInfo) -> addressInfo.toRoadNumberEntity(management) }
             )
+            result.clear()
             entityManager.clear()
         }
 
