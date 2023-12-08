@@ -7,6 +7,7 @@ import com.address.dsmproject.job.dto.AddressJibunInfo
 import com.address.dsmproject.job.dto.toRoadNumberEntity
 import com.address.dsmproject.util.JusoConstants.RoadAddress.ENG_FILE_PATH
 import com.address.dsmproject.util.JusoConstants.RoadAddress.KOR_FILE_PATH
+import jakarta.persistence.EntityManager
 import org.springframework.batch.core.StepContribution
 import org.springframework.batch.core.StepExecutionListener
 import org.springframework.batch.core.scope.context.ChunkContext
@@ -18,6 +19,7 @@ import java.nio.charset.Charset
 
 class SaveAddressTasklet(
     private val roadNumberRepository: RoadNumberRepository,
+    private val entityManager: EntityManager,
 ) : Tasklet, StepExecutionListener {
     companion object {
         const val ROAD_ADDRESS_KOR_PATH = "$KOR_FILE_PATH/rnaddrkor_"
@@ -70,9 +72,10 @@ class SaveAddressTasklet(
                 }
             }
 
-            roadNumberRepository.saveAll(
+            roadNumberRepository.saveAllAndFlush(
                 result.flatMap { (management, addressInfo) -> addressInfo.toRoadNumberEntity(management) }
             )
+            entityManager.clear()
         }
 
         return RepeatStatus.FINISHED

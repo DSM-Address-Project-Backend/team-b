@@ -2,6 +2,7 @@ package com.address.dsmproject.job
 
 import com.address.dsmproject.domain.roadNumber.RoadNumberRepository
 import com.address.dsmproject.job.tasklet.SaveAddressTasklet
+import jakarta.persistence.EntityManager
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
 import org.springframework.batch.core.configuration.annotation.JobScope
@@ -16,6 +17,7 @@ import org.springframework.transaction.PlatformTransactionManager
 class SaveJobConfiguration(
     private val jobRepository: JobRepository,
     private val transactionManager: PlatformTransactionManager,
+    private val entityManager: EntityManager,
     private val roadNumberRepository: RoadNumberRepository,
 ) {
     companion object {
@@ -34,7 +36,7 @@ class SaveJobConfiguration(
     @JobScope
     fun saveStep(): Step {
         return StepBuilder(STEP_NAME, jobRepository)
-            .tasklet(SaveAddressTasklet(roadNumberRepository), transactionManager)
+            .tasklet(SaveAddressTasklet(roadNumberRepository, entityManager), transactionManager)
             .build()
     }
 }
