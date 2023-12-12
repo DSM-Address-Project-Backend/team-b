@@ -85,15 +85,15 @@ class SaveAddressTasklet(
     }
 
     private fun saveKorAddressInfoFromFile(path: String) {
-        File(path).readLines(Charset.forName(EUC_KR)).forEach {
-            val split = it.split("|")
+        path.readFile().forEach { line ->
+            val split = line.split("|")
             result[split[0]] = AddressInfo.of(split)
         }
     }
 
     private fun saveKorJibunInfoFromFile(path: String) {
-        File(path).readLines(Charset.forName(EUC_KR)).forEach {
-            val split = it.split("|")
+        path.readFile().forEach { line ->
+            val split = line.split("|")
             result[split[0]]?.jibuns?.add(
                 AddressJibunInfo(
                     mainJibunNumber = split[7].toInt(),
@@ -105,7 +105,7 @@ class SaveAddressTasklet(
     }
 
     private fun saveEngAddressInfoFromFile(path: String) {
-        File(path).readLines(Charset.forName(EUC_KR)).forEach { line ->
+        path.readFile().forEach { line ->
             val split = line.split('|')
             result[split[0]]?.common?.addressEngInfo = AddressEngInfo(
                 cityProvinceNameEng = split[2],
@@ -116,4 +116,6 @@ class SaveAddressTasklet(
             )
         }
     }
+
+    private fun String.readFile(): List<String> = File(this).readLines(Charset.forName(EUC_KR))
 }
