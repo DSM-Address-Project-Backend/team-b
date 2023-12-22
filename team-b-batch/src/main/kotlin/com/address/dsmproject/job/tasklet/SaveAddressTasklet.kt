@@ -52,6 +52,8 @@ class SaveAddressTasklet(
     override fun execute(contribution: StepContribution, chunkContext: ChunkContext): RepeatStatus {
         val korAddressFile = File(KOR_FILE_PATH)
         val engAddressFile = File(ENG_FILE_PATH)
+
+        roadNumberRepository.truncateTable()
         for (region in REGION_LIST) {
             korAddressFile.walk().forEach {
                 if (PatternMatchUtils.simpleMatch("$ROAD_ADDRESS_KOR_PATH$region", it.path)) {
@@ -76,10 +78,10 @@ class SaveAddressTasklet(
             )
             result.clear()
             entityManager.clear()
-
-            korAddressFile.deleteRecursively()
-            engAddressFile.deleteRecursively()
         }
+
+        korAddressFile.deleteRecursively()
+        engAddressFile.deleteRecursively()
 
         return RepeatStatus.FINISHED
     }
