@@ -68,8 +68,8 @@ class RoadNumberEntity(
     @Column(columnDefinition = "VARCHAR(500)", nullable = false)
     val korFullText: String,
 
-    @Column(columnDefinition = "VARCHAR(500)", nullable = false)
-    val engFullText: String,
+    @Column(columnDefinition = "VARCHAR(500)", nullable = true)
+    val engFullText: String?,
 
     @Column(columnDefinition = "CHAR(26)", nullable = false)
     val managementNumber: String,

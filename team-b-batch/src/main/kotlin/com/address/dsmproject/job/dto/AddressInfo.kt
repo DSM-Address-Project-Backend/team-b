@@ -24,7 +24,7 @@ data class AddressCommonInfo(
 data class AddressRoadInfo(
     val mainBuildingNumber: Int,
     val subBuildingNumber: Int,
-    val buildingName: String?,
+    val buildingName: String,
 )
 
 data class AddressJibunInfo(
@@ -39,43 +39,64 @@ data class AddressInfo(
     val jibuns: MutableList<AddressJibunInfo>
 ) {
     companion object {
-        fun of(split: List<String>) = AddressInfo(
-            common = AddressCommonInfo(
-                cityProvinceName = split[2],
-                countyDistricts = split[3],
-                eupMyeonDong = split[4],
-                beobJeongLi = split[5],
-                postalCode = split[16].toInt(),
-                roadName = split[10],
-            ),
-            road = AddressRoadInfo(
-                mainBuildingNumber = split[12].toInt(),
-                subBuildingNumber = split[13].toInt(),
-                buildingName = if (split[21] == "") split[22] else split[21]
-            ),
-            jibuns = mutableListOf(
-                AddressJibunInfo(
-                    mainJibunNumber = split[7].toInt(),
-                    subJibunNumber = split[8].toInt(),
-                    represents = true
+        fun of(split: List<String>): AddressInfo =
+            AddressInfo(
+                common = AddressCommonInfo(
+                    cityProvinceName = split[2],
+                    countyDistricts = split[3],
+                    eupMyeonDong = split[4],
+                    beobJeongLi = split[5],
+                    postalCode = split[16].toInt(),
+                    roadName = split[10],
+                ),
+                road = AddressRoadInfo(
+                    mainBuildingNumber = split[12].toInt(),
+                    subBuildingNumber = split[13].toInt(),
+                    buildingName = if (split[21] == "") split[22] else split[21]
+                ),
+                jibuns = mutableListOf(
+                    AddressJibunInfo(
+                        mainJibunNumber = split[7].toInt(),
+                        subJibunNumber = split[8].toInt(),
+                        represents = true,
+                    )
                 )
             )
-        )
     }
 }
 
+
 fun AddressInfo.toRoadNumberEntity(managementNumber: String): List<RoadNumberEntity> {
-    val commonKorFullText =
-        this.common.cityProvinceName + this.common.countyDistricts + this.common.eupMyeonDong + this.common.beobJeongLi
-    val commonEngFullText =
-        this.common.addressEngInfo?.cityProvinceNameEng + this.common.addressEngInfo?.countyDistrictsEng + this.common.addressEngInfo?.eupMyeonDongEng + this.common.addressEngInfo?.beobJeongLiEng
-    val addressKorFullText =
-        commonKorFullText + this.road.mainBuildingNumber + this.road.subBuildingNumber + this.road.buildingName
-    val addressEngFullText =
-        commonEngFullText + this.road.mainBuildingNumber + this.road.subBuildingNumber + this.road.buildingName
-    return this.jibuns.map { jibun ->
-        val jibunKorFullText = commonKorFullText + jibun.mainJibunNumber + jibun.subJibunNumber
-        val jibunEngFullText = commonEngFullText + jibun.mainJibunNumber + jibun.subJibunNumber
+    val addressKorFullText: String = common.cityProvinceName
+        .addStringIf(common.countyDistricts.isNotBlank(), common.countyDistricts)
+        .addStringIf(true, "${common.eupMyeonDong} ${common.roadName} ${road.mainBuildingNumber}")
+        .addStringIf(road.subBuildingNumber != 0, road.subBuildingNumber.toString(), "-")
+        .addStringIf(road.buildingName.isNotBlank(), "(${road.buildingName})")
+
+    val addressEngFullText: String? = common.addressEngInfo?.let {
+        road.mainBuildingNumber.toString()
+            .addStringIf(road.subBuildingNumber != 0, road.subBuildingNumber.toString(), "-")
+            .addStringIf(true, "${it.roadNameEng}, ${it.eupMyeonDongEng}", ", ")
+            .addStringIf(it.countyDistrictsEng.isNotBlank(), it.countyDistrictsEng, ", ")
+            .addStringIf(true, "${it.cityProvinceNameEng}, Korea", ", ")
+    }
+
+    return this.jibuns.map {
+        val jibunKorFullText = common.cityProvinceName
+            .addStringIf(common.countyDistricts.isNotBlank(), common.countyDistricts)
+            .addStringIf(true, common.eupMyeonDong)
+            .addStringIf(common.beobJeongLi.isNotBlank(), common.beobJeongLi)
+            .addStringIf(true, it.mainJibunNumber.toString())
+            .addStringIf(it.subJibunNumber != 0, it.subJibunNumber.toString(), "-")
+
+        val jibunEngFullText = common.addressEngInfo?.let { eng ->
+            it.mainJibunNumber.toString()
+                .addStringIf(it.subJibunNumber != 0, "${it.subJibunNumber}", "-")
+                .addStringIf(eng.beobJeongLiEng.isNotBlank(), eng.beobJeongLiEng, ", ")
+                .addStringIf(true, eng.eupMyeonDongEng, ", ")
+                .addStringIf(eng.countyDistrictsEng.isNotBlank(), eng.countyDistrictsEng, ", ")
+                .addStringIf(true, "${eng.cityProvinceNameEng}, Korea", ", ")
+        }
 
         RoadNumberEntity(
             cityProvinceName = this.common.cityProvinceName,
@@ -86,13 +107,13 @@ fun AddressInfo.toRoadNumberEntity(managementNumber: String): List<RoadNumberEnt
             countyDistrictsEng = this.common.addressEngInfo?.countyDistrictsEng,
             eupMyeonDongEng = this.common.addressEngInfo?.eupMyeonDongEng,
             beobJeongLiEng = this.common.addressEngInfo?.beobJeongLiEng,
-            isRepresent = jibun.represents,
+            isRepresent = it.represents,
             postalCode = this.common.postalCode,
             roadName = this.common.roadName,
             roadNameEng = this.common.addressEngInfo?.roadNameEng,
             buildingName = this.road.buildingName,
-            mainJibunNumber = jibun.mainJibunNumber,
-            subJibunNumber = jibun.subJibunNumber,
+            mainJibunNumber = it.mainJibunNumber,
+            subJibunNumber = it.subJibunNumber,
             type = RoadNumberType.JIBUN,
             korFullText = jibunKorFullText,
             engFullText = jibunEngFullText,
@@ -121,3 +142,6 @@ fun AddressInfo.toRoadNumberEntity(managementNumber: String): List<RoadNumberEnt
         )
     )
 }
+
+fun String.addStringIf(condition: Boolean, target: String, prefix: String = " "): String =
+    if (condition) this + prefix + target else this

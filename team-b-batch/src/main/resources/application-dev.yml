@@ -16,3 +16,7 @@ spring:
       hibernate:
         jdbc:
           batch_size: 200
+
+  batch:
+    jdbc:
+      initialize-schema: always
