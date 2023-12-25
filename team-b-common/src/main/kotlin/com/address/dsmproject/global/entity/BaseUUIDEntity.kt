@@ -1,18 +1,23 @@
 package com.address.dsmproject.global.entity
 
-import jakarta.persistence.Column
-import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
 import jakarta.persistence.MappedSuperclass
-import org.hibernate.annotations.GenericGenerator
+import org.springframework.data.domain.Persistable
 import java.util.UUID
 
 @MappedSuperclass
 abstract class BaseUUIDEntity(
+    @field:Id
+    @get:JvmName("getIdentifier")
+    open var id: UUID = defaultUUID
+) : Persistable<UUID> {
 
-    @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    val id: UUID = UUID.randomUUID()
-)
+    override fun getId() = id
+
+    override fun isNew() =
+        (id == defaultUUID).apply { if (this) id = UUID.randomUUID() }
+
+    companion object {
+        private val defaultUUID = UUID(0, 0)
+    }
+}

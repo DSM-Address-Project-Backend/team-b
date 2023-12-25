@@ -15,4 +15,8 @@ spring:
       dialect: org.hibernate.dialect.MySQL8InnoDBDialect
       hibernate:
         jdbc:
-          batch_size: 1000
+          batch_size: 200
+
+  batch:
+    jdbc:
+      initialize-schema: always
