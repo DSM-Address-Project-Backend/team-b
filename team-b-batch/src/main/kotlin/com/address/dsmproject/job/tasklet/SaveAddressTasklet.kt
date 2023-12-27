@@ -27,22 +27,22 @@ class SaveAddressTasklet(
         const val ROAD_ADDRESS_ENG_PATH = "$ENG_FILE_PATH/rneng_"
         const val EUC_KR = "euc_kr"
         val REGION_LIST = listOf(
-//            "busan.txt",
+            "busan.txt",
 //            "chungbuk.txt",
 //            "chungnam.txt",
-//            "daegu.txt",
-            "daejeon.txt",
+            "daegu.txt",
+//            "daejeon.txt",
 //            "gangwon.txt",
 //            "gwangju.txt",
 //            "gyeongbuk.txt",
 //            "gyeongnam.txt",
 //            "gyunggi.txt",
-//            "incheon.txt",
+            "incheon.txt",
 //            "jeju.txt",
 //            "jeonbuk.txt",
 //            "jeonnam.txt",
 //            "sejong.txt",
-//            "seoul.txt",
+            "seoul.txt",
 //            "ulsan.txt",
         )
     }
@@ -53,7 +53,7 @@ class SaveAddressTasklet(
         val korAddressFile = File(KOR_FILE_PATH)
         val engAddressFile = File(ENG_FILE_PATH)
 
-        roadNumberRepository.truncateTable()
+//        roadNumberRepository.truncateTable()
         for (region in REGION_LIST) {
             korAddressFile.walk().forEach {
                 if (PatternMatchUtils.simpleMatch("$ROAD_ADDRESS_KOR_PATH$region", it.path)) {

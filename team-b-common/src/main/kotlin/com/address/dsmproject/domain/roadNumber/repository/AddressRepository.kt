@@ -14,7 +14,7 @@ class AddressRepository(
     private val jpaQueryFactory: JPAQueryFactory,
 ) {
 
-    fun autoCompletion(keyword: String, type: String): List<AutoCompletionAddressVO> {
+    fun autoCompletionWithKorean(keyword: String, type: String): List<AutoCompletionAddressVO> {
         return jpaQueryFactory
             .select(
                 QAutoCompletionAddressVO(
