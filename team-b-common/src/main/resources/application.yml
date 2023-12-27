@@ -1,6 +1,6 @@
 spring:
   jpa:
-    database-platform: com.address.dsmproject.global.config.MysqlDialectConfig
+    database-platform: org.hibernate.dialect.MySQL8InnoDBDialect
     properties:
       hibernate.format_sql: true
     show-sql: true
