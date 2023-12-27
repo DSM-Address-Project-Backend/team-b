@@ -19,16 +19,13 @@ class AddressRepository(
         type: String,
         page: Long,
     ): List<RoadNumberEntity> {
-        val booleanTemplate: NumberTemplate<*> = Expressions.numberTemplate(
-            Double::class.javaObjectType, "function('match',{0},{1})", roadNumberEntity.korFullText, keyword
-        )
+        val booleanTemplate: NumberTemplate<*>
+        = Expressions.numberTemplate(Double::class.javaObjectType, "match({0}) against('{1}' in boolean mode)", roadNumberEntity.korFullText)
 
-        return jpaQueryFactory
+        return listOf(jpaQueryFactory
             .selectFrom(roadNumberEntity)
             .where(booleanTemplate.gt(0))
-            .offset(page * 10)
-            .limit(10)
-            .fetch()
+            .fetch().get(0))
     }
 
     private fun searchFulltext(keyword: String, type: String): BooleanExpression? {
