@@ -1,6 +1,6 @@
 package com.address.dsmproject.job.tasklet
 
-import com.address.dsmproject.domain.roadNumber.RoadNumberRepository
+import com.address.dsmproject.domain.roadNumber.repository.RoadNumberRepository
 import com.address.dsmproject.job.dto.AddressEngInfo
 import com.address.dsmproject.job.dto.AddressInfo
 import com.address.dsmproject.job.dto.AddressJibunInfo
@@ -27,23 +27,23 @@ class SaveAddressTasklet(
         const val ROAD_ADDRESS_ENG_PATH = "$ENG_FILE_PATH/rneng_"
         const val EUC_KR = "euc_kr"
         val REGION_LIST = listOf(
-            "busan.txt",
-            "chungbuk.txt",
-            "chungnam.txt",
-            "daegu.txt",
+//            "busan.txt",
+//            "chungbuk.txt",
+//            "chungnam.txt",
+//            "daegu.txt",
             "daejeon.txt",
-            "gangwon.txt",
-            "gwangju.txt",
-            "gyeongbuk.txt",
-            "gyeongnam.txt",
-            "gyunggi.txt",
-            "incheon.txt",
-            "jeju.txt",
-            "jeonbuk.txt",
-            "jeonnam.txt",
-            "sejong.txt",
-            "seoul.txt",
-            "ulsan.txt",
+//            "gangwon.txt",
+//            "gwangju.txt",
+//            "gyeongbuk.txt",
+//            "gyeongnam.txt",
+//            "gyunggi.txt",
+//            "incheon.txt",
+//            "jeju.txt",
+//            "jeonbuk.txt",
+//            "jeonnam.txt",
+//            "sejong.txt",
+//            "seoul.txt",
+//            "ulsan.txt",
         )
     }
 

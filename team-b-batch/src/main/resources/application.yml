@@ -1,2 +1,29 @@
 address:
-  url: ${ADDRESS_URL}
+  url: ${ADDRESS_URL:https://business.juso.go.kr}
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DEV_DB_URL:jdbc:mysql://localhost:3306/address?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true}
+    username: ${DEV_DB_USERNAME:root}
+    password: ${DEV_DB_PASSWORD:qaz}
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+      dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+      hibernate:
+        jdbc:
+          batch_size: 200
+
+  sql:
+    init:
+      mode: always
+
+  batch:
+    jdbc:
+      initialize-schema: always

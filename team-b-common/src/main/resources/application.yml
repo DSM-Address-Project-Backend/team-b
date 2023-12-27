@@ -1,0 +1,7 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+      hibernate.format_sql: true
+    show-sql: true
