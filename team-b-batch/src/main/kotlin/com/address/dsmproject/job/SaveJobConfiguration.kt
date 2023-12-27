@@ -1,6 +1,6 @@
 package com.address.dsmproject.job
 
-import com.address.dsmproject.domain.roadNumber.RoadNumberRepository
+import com.address.dsmproject.domain.roadNumber.repository.RoadNumberRepository
 import com.address.dsmproject.job.tasklet.SaveAddressTasklet
 import jakarta.persistence.EntityManager
 import org.springframework.batch.core.Job

@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${DEV_DB_URL}
-    username: ${DEV_DB_USERNAME}
-    password: ${DEV_DB_PASSWORD}
+    url: ${DEV_DB_URL:jdbc:mysql://localhost:3306/address}
+    username: ${DEV_DB_USERNAME:root}
+    password: ${DEV_DB_PASSWORD:11111111}
 
   jpa:
     open-in-view: false
