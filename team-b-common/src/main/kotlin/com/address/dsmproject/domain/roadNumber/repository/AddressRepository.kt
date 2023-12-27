@@ -1,7 +1,6 @@
 package com.address.dsmproject.domain.roadNumber.repository
 
 import com.address.dsmproject.domain.roadNumber.QRoadNumberEntity.roadNumberEntity
-import com.address.dsmproject.domain.roadNumber.RoadNumberEntity
 import com.address.dsmproject.domain.roadNumber.repository.vo.AutoCompletionAddressVO
 import com.address.dsmproject.domain.roadNumber.repository.vo.QAutoCompletionAddressVO
 import com.querydsl.core.types.dsl.BooleanExpression
@@ -14,7 +13,7 @@ class AddressRepository(
     private val jpaQueryFactory: JPAQueryFactory,
 ) {
 
-    fun autoCompletionWithKorean(keyword: String, type: String): List<AutoCompletionAddressVO> {
+    fun autoCompletionWithKor(keyword: String): List<AutoCompletionAddressVO> {
         return jpaQueryFactory
             .select(
                 QAutoCompletionAddressVO(
@@ -24,27 +23,22 @@ class AddressRepository(
                 )
             )
             .from(roadNumberEntity)
-            .where(searchFulltext(keyword, type))
+            .where(searchFulltext(keyword, KOREAN))
             .limit(LIMIT)
             .fetch()
     }
 
-    fun queryAddress(
-        keyword: String,
-        type: String,
-        page: Long,
-    ): List<RoadNumberEntity> {
-        val numberTemplate = numberTemplate(
-            Double::class.javaObjectType,
-            "function('match', {0}, {1})",
-            roadNumberEntity.korFullText,
-            keyword
-        )
-
+    fun autoCompletionWithEng(keyword: String): List<AutoCompletionAddressVO> {
         return jpaQueryFactory
-            .selectFrom(roadNumberEntity)
-            .where(numberTemplate.gt(0))
-            .offset(page * LIMIT)
+            .select(
+                QAutoCompletionAddressVO(
+                    roadNumberEntity.cityProvinceNameEng,
+                    roadNumberEntity.countyDistrictsEng,
+                    roadNumberEntity.eupMyeonDongEng
+                )
+            )
+            .from(roadNumberEntity)
+            .where(searchFulltext(keyword, ENGLISH))
             .limit(LIMIT)
             .fetch()
     }
@@ -53,8 +47,9 @@ class AddressRepository(
         keyword.ifBlank {
             return null
         }
+
         return when (type) {
-            "KOREAN" -> numberTemplate(
+            KOREAN -> numberTemplate(
                 Double::class.javaObjectType,
                 "function('match', {0}, {1})",
                 roadNumberEntity.korFullText,
@@ -72,5 +67,7 @@ class AddressRepository(
 
     companion object {
         const val LIMIT = 10L
+        const val KOREAN = "KOREAN"
+        const val ENGLISH = "ENGLISH"
     }
 }
