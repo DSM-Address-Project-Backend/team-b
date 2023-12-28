@@ -12,10 +12,10 @@ class AddressService(
 
     fun autoCompletion(keyword: String): List<AutoCompletionAddressVO> {
         val languageType = checkKeywordLanguage(keyword)
-        return when (languageType) {
-            KOREAN ->
-        }
-        return addressRepository.autoCompletion(keyword, checkKeywordLanguage(keyword))
+
+//        return addressRepository.autoCompletion(keyword, checkKeywordLanguage(keyword))
+
+        return emptyList()
     }
 
     fun getAddress(keyword: String, page: Long): List<RoadNumberEntity> {
