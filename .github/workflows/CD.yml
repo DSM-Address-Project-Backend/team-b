@@ -1,0 +1,86 @@
+name: juso
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  api-build:
+    permissions:
+      id-token: write
+      contents: read
+
+    environment: api
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      - name: Build Gradle
+        uses: gradle/gradle-build-action@v2
+        working-directory: ./team-b-api
+        run: ./gradlew
+        with:
+          arguments: |
+            build
+            --build-cache
+            --no-daemon
+
+      - name: Deploy to xquare
+        working-directory: ./team-b-api
+        run: team-xquare/xquare-deployment-action@master
+        with:
+          environment: prod
+          access_key: ${{ secrets.XQUARE_ACCESS_KEY }}
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          buildargs: |
+            DB_URL=${{ secrets.DB_URL }}
+            DB_USERNAME=${{ secrets.DB_USERNAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+
+  batch-build:
+    permissions:
+      id-token: write
+      contents: read
+
+    environment: batch
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      - name: Build Gradle
+        uses: gradle/gradle-build-action@v2
+        working-directory: ./team-b-batch
+        run: ./gradlew
+        with:
+          arguments: |
+            build
+            --build-cache
+            --no-daemon
+
+      - name: Deploy to xquare
+        uses: team-xquare/xquare-deployment-action@master
+        working-directory: ./team-b-batch
+        run: team-xquare/xquare-deployment-action@master
+        with:
+          environment: prod
+          access_key: ${{ secrets.XQUARE_ACCESS_KEY }}
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          buildargs: |
+            DB_URL=${{ secrets.DB_URL }}
+            DB_USERNAME=${{ secrets.DB_USERNAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
