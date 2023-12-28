@@ -1,6 +1,5 @@
 config:
   name: juso
   service_type: be
-  port: 8080
-  domain:
-    prod: juso.xquare.app
+  port: 8081
+  domain: juso.xquare.app
