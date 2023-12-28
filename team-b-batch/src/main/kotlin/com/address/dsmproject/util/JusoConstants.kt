@@ -9,7 +9,7 @@ object JusoConstants {
         const val INT_NUM = "undefined"
         const val INT_FILE_NO = "undefined"
         const val ZIP = ".zip"
-        const val RESOURCE_PATH = "team-b-batch/src/main/resources/"
+        const val RESOURCE_PATH = "src/main/resources/"
     }
 
     object RoadAddress {
