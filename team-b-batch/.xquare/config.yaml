@@ -2,4 +2,5 @@ config:
   name: juso-batch
   service_type: be
   port: 8080
-  domain: juso-batch.xquare.app
+  domain:
+    prod: juso-batch.xquare.app
