@@ -1,5 +1,5 @@
 address:
-  url: ${ADDRESS_URL:https://business.juso.go.kr}
+  url: https://business.juso.go.kr
 
 spring:
   datasource:
