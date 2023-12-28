@@ -10,7 +10,7 @@ class AddressService(
 ) {
 
     fun autoCompletion(keyword: String): List<AutoCompletionResponse> {
-        val languageType = checkKeywordLanguage(keyword)
+        val languageType = checkLanguage(keyword)
 
         val result = when (languageType) {
             KOREAN -> addressRepository.autoCompletionWithKor(keyword)
@@ -26,7 +26,7 @@ class AddressService(
         }
     }
 
-    private fun checkKeywordLanguage(keyword: String): String =
+    private fun checkLanguage(keyword: String) =
         if (keyword.matches("^[^a-zA-Z]*$".toRegex())) KOREAN else ENGLISH
 
     companion object {
