@@ -34,9 +34,9 @@ jobs:
             --no-daemon
 
       - name: Deploy to xquare
-        working-directory: ./team-b-api
-        run: team-xquare/xquare-deployment-action@master
+        uses: team-xquare/xquare-deployment-action@master
         with:
+          base_url: team-b-api
           environment: prod
           access_key: ${{ secrets.XQUARE_ACCESS_KEY }}
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
@@ -74,10 +74,9 @@ jobs:
 
       - name: Deploy to xquare
         uses: team-xquare/xquare-deployment-action@master
-        working-directory: ./team-b-batch
-        run: team-xquare/xquare-deployment-action@master
         with:
           environment: prod
+          base_url: team-b-batch
           access_key: ${{ secrets.XQUARE_ACCESS_KEY }}
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           buildargs: |
