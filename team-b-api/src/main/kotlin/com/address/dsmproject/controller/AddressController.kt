@@ -1,8 +1,8 @@
 package com.address.dsmproject.controller
 
-import com.address.dsmproject.controller.dto.AutoCompletionResponse
+import com.address.dsmproject.controller.dto.AutoCompletionsResponse
 import com.address.dsmproject.service.AddressService
-import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.NotBlank
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -17,7 +17,7 @@ class AddressController(
 ) {
 
     @GetMapping("/help")
-    fun autoCompletion(@RequestParam @NotNull keyword: String): List<AutoCompletionResponse> {
+    fun autoCompletion(@RequestParam @NotBlank keyword: String): AutoCompletionsResponse {
         return addressService.autoCompletion(keyword)
     }
 }

@@ -1,6 +1,6 @@
 package com.address.dsmproject.service
 
-import com.address.dsmproject.controller.dto.AutoCompletionResponse
+import com.address.dsmproject.controller.dto.AutoCompletionsResponse
 import com.address.dsmproject.domain.roadNumber.repository.AddressRepository
 import org.springframework.stereotype.Service
 
@@ -9,7 +9,7 @@ class AddressService(
     private val addressRepository: AddressRepository,
 ) {
 
-    fun autoCompletion(keyword: String): List<AutoCompletionResponse> {
+    fun autoCompletion(keyword: String): AutoCompletionsResponse {
         val languageType = checkLanguage(keyword)
 
         val result = when (languageType) {
@@ -17,13 +17,9 @@ class AddressService(
             else -> addressRepository.autoCompletionWithEng(keyword)
         }
 
-        return result.map {
-            AutoCompletionResponse(
-                cityProvinceName = it.cityProvinceName,
-                countyDistricts = it.countyDistricts,
-                eupMyeonDong = it.eupMyeonDong,
-            )
-        }
+        val items = result.map { "${it.cityProvinceName} ${it.countyDistricts} ${it.eupMyeonDong}" }
+
+        return AutoCompletionsResponse(items)
     }
 
     private fun checkLanguage(keyword: String) =
