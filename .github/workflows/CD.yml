@@ -7,6 +7,10 @@ on:
 
 jobs:
   api-build:
+    permissions:
+      id-token: write
+      contents: read
+
     environment: api
     runs-on: ubuntu-latest
 
@@ -40,7 +44,10 @@ jobs:
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
 
   batch-build:
-
+    permissions:
+      id-token: write
+      contents: read
+      
     environment: batch
     runs-on: ubuntu-latest
 
@@ -55,8 +62,6 @@ jobs:
 
       - name: Build Gradle
         uses: gradle/gradle-build-action@v2
-        working-directory: ./team-b-batch
-        run: ./gradlew
         with:
           arguments: |
             build
