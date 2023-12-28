@@ -8,6 +8,7 @@ import com.address.dsmproject.job.dto.toRoadNumberEntity
 import com.address.dsmproject.util.JusoConstants.RoadAddress.ENG_FILE_PATH
 import com.address.dsmproject.util.JusoConstants.RoadAddress.KOR_FILE_PATH
 import jakarta.persistence.EntityManager
+import org.slf4j.LoggerFactory
 import org.springframework.batch.core.StepContribution
 import org.springframework.batch.core.StepExecutionListener
 import org.springframework.batch.core.scope.context.ChunkContext
@@ -28,23 +29,25 @@ class SaveAddressTasklet(
         const val EUC_KR = "euc_kr"
         val REGION_LIST = listOf(
             "busan.txt",
-//            "chungbuk.txt",
-//            "chungnam.txt",
+            "chungbuk.txt",
+            "chungnam.txt",
             "daegu.txt",
-//            "daejeon.txt",
-//            "gangwon.txt",
-//            "gwangju.txt",
-//            "gyeongbuk.txt",
-//            "gyeongnam.txt",
-//            "gyunggi.txt",
+            "daejeon.txt",
+            "gangwon.txt",
+            "gwangju.txt",
+            "gyeongbuk.txt",
+            "gyeongnam.txt",
+            "gyunggi.txt",
             "incheon.txt",
-//            "jeju.txt",
-//            "jeonbuk.txt",
-//            "jeonnam.txt",
-//            "sejong.txt",
+            "jeju.txt",
+            "jeonbuk.txt",
+            "jeonnam.txt",
+            "sejong.txt",
             "seoul.txt",
-//            "ulsan.txt",
+            "ulsan.txt",
         )
+
+        private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
     private val result: MutableMap<String, AddressInfo> = HashMap()
@@ -53,7 +56,7 @@ class SaveAddressTasklet(
         val korAddressFile = File(KOR_FILE_PATH)
         val engAddressFile = File(ENG_FILE_PATH)
 
-//        roadNumberRepository.truncateTable()
+        roadNumberRepository.truncateTable()
         for (region in REGION_LIST) {
             korAddressFile.walk().forEach {
                 if (PatternMatchUtils.simpleMatch("$ROAD_ADDRESS_KOR_PATH$region", it.path)) {
@@ -78,6 +81,8 @@ class SaveAddressTasklet(
             )
             result.clear()
             entityManager.clear()
+
+            logger.info("$region Compleated!")
         }
 
         korAddressFile.deleteRecursively()
