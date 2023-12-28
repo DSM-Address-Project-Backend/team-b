@@ -4,14 +4,14 @@ address:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${DEV_DB_URL:jdbc:mysql://localhost:3306/address?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true}
-    username: ${DEV_DB_USERNAME:root}
-    password: ${DEV_DB_PASSWORD:qaz}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/address?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:qaz}
 
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate.format_sql: true
