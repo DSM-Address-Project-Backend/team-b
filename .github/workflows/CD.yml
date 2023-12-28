@@ -25,6 +25,8 @@ jobs:
 
       - name: Build Gradle
         uses: gradle/gradle-build-action@v2
+        working-directory: ./team-b-api
+        run: ./gradlew
         with:
           arguments: |
             build
@@ -32,7 +34,8 @@ jobs:
             --no-daemon
 
       - name: Deploy to xquare
-        uses: team-xquare/xquare-deployment-action@master
+        working-directory: ./team-b-api
+        run: team-xquare/xquare-deployment-action@master
         with:
           environment: prod
           access_key: ${{ secrets.XQUARE_ACCESS_KEY }}
@@ -61,6 +64,8 @@ jobs:
 
       - name: Build Gradle
         uses: gradle/gradle-build-action@v2
+        working-directory: ./team-b-batch
+        run: ./gradlew
         with:
           arguments: |
             build
@@ -69,6 +74,8 @@ jobs:
 
       - name: Deploy to xquare
         uses: team-xquare/xquare-deployment-action@master
+        working-directory: ./team-b-batch
+        run: team-xquare/xquare-deployment-action@master
         with:
           environment: prod
           access_key: ${{ secrets.XQUARE_ACCESS_KEY }}
