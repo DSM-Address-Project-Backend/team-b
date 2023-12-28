@@ -1,32 +1,28 @@
 package com.address.dsmproject.service
 
-import com.address.dsmproject.domain.roadNumber.RoadNumberEntity
+import com.address.dsmproject.controller.dto.AutoCompletionsResponse
 import com.address.dsmproject.domain.roadNumber.repository.AddressRepository
-import com.address.dsmproject.domain.roadNumber.repository.vo.AutoCompletionAddressVO
 import org.springframework.stereotype.Service
 
 @Service
 class AddressService(
-    private val addressRepository: AddressRepository
+    private val addressRepository: AddressRepository,
 ) {
 
-    fun autoCompletion(keyword: String): List<AutoCompletionAddressVO> {
-        val languageType = checkKeywordLanguage(keyword)
+    fun autoCompletion(keyword: String): AutoCompletionsResponse {
+        val languageType = checkLanguage(keyword)
 
-//        return addressRepository.autoCompletion(keyword, checkKeywordLanguage(keyword))
+        val result = when (languageType) {
+            KOREAN -> addressRepository.autoCompletionWithKor(keyword)
+            else -> addressRepository.autoCompletionWithEng(keyword)
+        }
 
-        return emptyList()
+        val items = result.map { "${it.cityProvinceName} ${it.countyDistricts} ${it.eupMyeonDong}" }
+
+        return AutoCompletionsResponse(items)
     }
 
-    fun getAddress(keyword: String, page: Long): List<RoadNumberEntity> {
-        return addressRepository.queryAddress(
-            keyword = keyword,
-            type = checkKeywordLanguage(keyword),
-            page = page,
-        )
-    }
-
-    private fun checkKeywordLanguage(keyword: String): String =
+    private fun checkLanguage(keyword: String) =
         if (keyword.matches("^[^a-zA-Z]*$".toRegex())) KOREAN else ENGLISH
 
     companion object {
