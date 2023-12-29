@@ -27,7 +27,7 @@ class AddressService(
             else -> addressRepository.autoCompletionWithLanguageType(keyword, ENGLISH)
         }
 
-        val response = result.map { "${it.cityProvinceName} ${it.countyDistricts} ${it.eupMyeonDong}" }
+        val response = result.map { "${it.cityProvinceName} ${it.countyDistricts} ${it.eupMyeonDong} ${it.roadName}" }.distinct()
 
         return AutoCompletionsResponse(response)
     }
