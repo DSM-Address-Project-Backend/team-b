@@ -22,8 +22,8 @@ class AddressService(
         val languageType = checkLanguage(keyword)
 
         val result = when (languageType) {
-            KOREAN -> addressRepository.autoCompletionWithKor(keyword)
-            else -> addressRepository.autoCompletionWithEng(keyword)
+            KOREAN -> addressRepository.autoCompletionWithLanguageType(keyword, KOREAN)
+            else -> addressRepository.autoCompletionWithLanguageType(keyword, ENGLISH)
         }
 
         val response = result.map { "${it.cityProvinceName} ${it.countyDistricts} ${it.eupMyeonDong}" }
@@ -35,8 +35,8 @@ class AddressService(
         val languageType = checkLanguage(keyword)
 
         val result = when (languageType) {
-            KOREAN -> addressRepository.searchAddressWithKor(page, keyword)
-            else -> addressRepository.searchAddressWithEng(page, keyword)
+            KOREAN -> addressRepository.searchAddressWithLanguageType(page, keyword, KOREAN)
+            else -> addressRepository.searchAddressWithLanguageType(page, keyword, ENGLISH)
         }
 
         val response = result.map { address ->

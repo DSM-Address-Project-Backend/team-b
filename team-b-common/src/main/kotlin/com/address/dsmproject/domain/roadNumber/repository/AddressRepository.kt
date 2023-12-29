@@ -18,10 +18,12 @@ class AddressRepository(
     companion object {
         const val LIMIT = 10L
         const val KOREAN = "KOREAN"
-        const val ENGLISH = "ENGLISH"
     }
 
-    fun autoCompletionWithKor(keyword: String): List<AutoCompletionAddressVO> {
+    fun autoCompletionWithLanguageType(
+        keyword: String,
+        language: String,
+    ): List<AutoCompletionAddressVO> {
         return jpaQueryFactory
             .select(
                 QAutoCompletionAddressVO(
@@ -31,29 +33,15 @@ class AddressRepository(
                 )
             )
             .from(roadNumberEntity)
-            .where(searchFulltext(keyword, KOREAN, roadNumberEntity))
+            .where(searchFulltext(keyword, language, roadNumberEntity))
             .limit(LIMIT)
             .fetch()
     }
 
-    fun autoCompletionWithEng(keyword: String): List<AutoCompletionAddressVO> {
-        return jpaQueryFactory
-            .select(
-                QAutoCompletionAddressVO(
-                    roadNumberEntity.cityProvinceNameEng,
-                    roadNumberEntity.countyDistrictsEng,
-                    roadNumberEntity.eupMyeonDongEng
-                )
-            )
-            .from(roadNumberEntity)
-            .where(searchFulltext(keyword, ENGLISH, roadNumberEntity))
-            .limit(LIMIT)
-            .fetch()
-    }
-
-    fun searchAddressWithKor(
+    fun searchAddressWithLanguageType(
         page: Int,
         keyword: String,
+        language: String
     ): List<SearchAddressVo> {
         val rn = QRoadNumberEntity("rn")
         val rn1 = QRoadNumberEntity("rn1")
@@ -75,37 +63,7 @@ class AddressRepository(
             .from(rn)
             .join(rn1)
             .on(rn.managementNumber.eq(rn1.managementNumber))
-            .where(searchFulltext(keyword, KOREAN, rn))
-            .offset(offset)
-            .limit(LIMIT)
-            .fetch()
-    }
-
-    fun searchAddressWithEng(
-        page: Int,
-        keyword: String,
-    ): List<SearchAddressVo> {
-        val rn = QRoadNumberEntity("rn")
-        val rn1 = QRoadNumberEntity("rn1")
-        val offset = (page - 1) * LIMIT
-
-        return jpaQueryFactory
-            .select(
-                QSearchAddressVo(
-                    rn.postalCode,
-                    rn.korFullText,
-                    rn.engFullText,
-                    rn1.korFullText,
-                    rn1.engFullText,
-                    rn1.isRepresent,
-                    rn.managementNumber,
-                    rn1.type
-                )
-            )
-            .from(rn)
-            .join(rn1)
-            .on(rn.managementNumber.eq(rn1.managementNumber))
-            .where(searchFulltext(keyword, ENGLISH, rn))
+            .where(searchFulltext(keyword, language, rn))
             .offset(offset)
             .limit(LIMIT)
             .fetch()
