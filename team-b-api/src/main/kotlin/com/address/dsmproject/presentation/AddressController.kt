@@ -2,6 +2,7 @@ package com.address.dsmproject.presentation
 
 import com.address.dsmproject.presentation.dto.response.AutoCompletionsResponse
 import com.address.dsmproject.presentation.dto.response.SearchAddressResponse
+import com.address.dsmproject.presentation.dto.response.TotalPageCountResponse
 import com.address.dsmproject.service.AddressService
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
@@ -30,7 +31,14 @@ class AddressController(
     fun searchAddress(
         @RequestParam @NotNull @Min(1) page: Int,
         @RequestParam @NotBlank keyword: String,
-    ): SearchAddressResponse? {
+    ): SearchAddressResponse {
         return addressService.searchAddress(page, keyword)
+    }
+
+    @GetMapping("/count")
+    fun addressCount(
+        @RequestParam @NotBlank keyword: String,
+    ): TotalPageCountResponse {
+        return addressService.getTotalPageCount(keyword)
     }
 }

@@ -7,6 +7,7 @@ import com.address.dsmproject.presentation.dto.response.AutoCompletionsResponse
 import com.address.dsmproject.presentation.dto.response.SearchAddressResponse
 import com.address.dsmproject.presentation.dto.response.SearchAddressResponse.AddressElement
 import com.address.dsmproject.presentation.dto.response.SearchAddressResponse.AddressElement.JibunElement
+import com.address.dsmproject.presentation.dto.response.TotalPageCountResponse
 import org.springframework.stereotype.Service
 
 @Service
@@ -67,9 +68,6 @@ class AddressService(
         return SearchAddressResponse(response)
     }
 
-    private fun checkLanguage(keyword: String) =
-        if (keyword.matches("^[^a-zA-Z]*$".toRegex())) KOREAN else ENGLISH
-
     private fun SearchAddressVo.toAddressElement(jibuns: MutableList<JibunElement>) = AddressElement(
         type = 0,
         postalCode = this.postalCode,
@@ -77,4 +75,17 @@ class AddressService(
         representAddressNameEng = this.representAddressNameEng,
         jibuns = jibuns.distinct(),
     )
+
+    fun getTotalPageCount(keyword: String): TotalPageCountResponse {
+        val languageType = checkLanguage(keyword)
+        val totalPageCount = when (languageType) {
+            KOREAN -> addressRepository.getTotalPageCount(keyword, KOREAN)
+            else -> addressRepository.getTotalPageCount(keyword, ENGLISH)
+        }
+
+        return TotalPageCountResponse(totalPageCount.toInt())
+    }
+
+    private fun checkLanguage(keyword: String) =
+        if (keyword.matches("^[^a-zA-Z]*$".toRegex())) KOREAN else ENGLISH
 }

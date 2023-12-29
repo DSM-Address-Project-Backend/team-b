@@ -69,6 +69,16 @@ class AddressRepository(
             .fetch()
     }
 
+    fun getTotalPageCount(keyword: String, language: String): Long {
+        return jpaQueryFactory
+            .select(
+                roadNumberEntity.count()
+            )
+            .from(roadNumberEntity)
+            .where(searchFulltext(keyword, language, roadNumberEntity))
+            .fetchOne() ?: 0
+    }
+
     private fun searchFulltext(keyword: String, type: String, targetEntity: QRoadNumberEntity): BooleanExpression? {
         keyword.ifBlank { return null }
 
