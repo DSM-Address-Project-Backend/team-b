@@ -24,7 +24,7 @@ class AddressController(
     fun autoCompletion(
         @RequestParam @NotBlank keyword: String,
     ): AutoCompletionsResponse {
-        return addressService.autoCompletion(keyword)
+        return addressService.autoCompletion(keyword.replace(" ", ""))
     }
 
     @GetMapping("/search")
@@ -32,13 +32,13 @@ class AddressController(
         @RequestParam @NotNull @Min(1) page: Int,
         @RequestParam @NotBlank keyword: String,
     ): SearchAddressResponse {
-        return addressService.searchAddress(page, keyword)
+        return addressService.searchAddress(page, keyword.replace(" ", ""))
     }
 
     @GetMapping("/search/count")
     fun addressCount(
         @RequestParam @NotBlank keyword: String,
     ): TotalPageCountResponse {
-        return addressService.getTotalPageCount(keyword)
+        return addressService.getTotalPageCount(keyword.replace(" ", ""))
     }
 }

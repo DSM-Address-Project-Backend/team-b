@@ -35,6 +35,12 @@ class AddressRepository(
             )
             .from(roadNumberEntity)
             .where(searchFulltext(keyword, language, roadNumberEntity))
+            .groupBy(
+                roadNumberEntity.cityProvinceName,
+                roadNumberEntity.countyDistricts,
+                roadNumberEntity.eupMyeonDong,
+                roadNumberEntity.roadName
+            )
             .limit(LIMIT)
             .fetch()
     }
@@ -88,14 +94,14 @@ class AddressRepository(
                 Double::class.javaObjectType,
                 "function('match', {0}, {1})",
                 targetEntity.korFullText,
-                "\"$keyword\"*"
+                "\"$keyword*\""
             ).gt(0)
 
             else -> numberTemplate(
                 Double::class.javaObjectType,
                 "function('match', {0}, {1})",
                 targetEntity.engFullText,
-                "\"$keyword\"*"
+                "\"$keyword*\""
             ).gt(0)
         }
     }
