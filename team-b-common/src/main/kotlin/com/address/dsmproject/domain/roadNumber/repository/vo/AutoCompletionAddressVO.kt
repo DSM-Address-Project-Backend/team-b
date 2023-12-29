@@ -6,4 +6,5 @@ data class AutoCompletionAddressVO @QueryProjection constructor(
     val cityProvinceName: String,
     val countyDistricts: String,
     val eupMyeonDong: String,
+    val roadName: String
 )
