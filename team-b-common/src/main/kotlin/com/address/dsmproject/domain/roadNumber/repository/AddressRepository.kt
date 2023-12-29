@@ -6,6 +6,8 @@ import com.address.dsmproject.domain.roadNumber.repository.vo.AutoCompletionAddr
 import com.address.dsmproject.domain.roadNumber.repository.vo.QAutoCompletionAddressVO
 import com.address.dsmproject.domain.roadNumber.repository.vo.QSearchAddressVo
 import com.address.dsmproject.domain.roadNumber.repository.vo.SearchAddressVo
+import com.address.dsmproject.domain.roadNumber.type.RoadNumberType
+import com.address.dsmproject.domain.roadNumber.type.RoadNumberType.*
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.Expressions.numberTemplate
 import com.querydsl.jpa.impl.JPAQueryFactory
@@ -29,7 +31,6 @@ class AddressRepository(
                 QAutoCompletionAddressVO(
                     roadNumberEntity.cityProvinceName,
                     roadNumberEntity.countyDistricts,
-                    roadNumberEntity.eupMyeonDong,
                     roadNumberEntity.roadName
                 )
             )
@@ -38,7 +39,6 @@ class AddressRepository(
             .groupBy(
                 roadNumberEntity.cityProvinceName,
                 roadNumberEntity.countyDistricts,
-                roadNumberEntity.eupMyeonDong,
                 roadNumberEntity.roadName
             )
             .limit(LIMIT)
