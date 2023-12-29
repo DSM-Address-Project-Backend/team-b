@@ -8,9 +8,8 @@ class CustomFunctionContributor : FunctionContributor {
     override fun contributeFunctions(functionContributions: FunctionContributions) {
         functionContributions.functionRegistry.registerPattern(
             "match",
-            "match (?1) against (?2)",
+            "match (?1) against (?2 in boolean mode)",
             functionContributions.typeConfiguration.basicTypeRegistry.resolve(StandardBasicTypes.DOUBLE)
         )
     }
-
 }

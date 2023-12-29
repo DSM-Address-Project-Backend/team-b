@@ -7,6 +7,7 @@ import com.address.dsmproject.domain.roadNumber.repository.vo.QAutoCompletionAdd
 import com.address.dsmproject.domain.roadNumber.repository.vo.QSearchAddressVo
 import com.address.dsmproject.domain.roadNumber.repository.vo.SearchAddressVo
 import com.querydsl.core.types.dsl.BooleanExpression
+import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.core.types.dsl.Expressions.numberTemplate
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.stereotype.Repository
@@ -66,6 +67,12 @@ class AddressRepository(
             .where(searchFulltext(keyword, language, rn))
             .offset(offset)
             .limit(LIMIT)
+            .orderBy(numberTemplate(
+                Double::class.javaObjectType,
+                "function('match', {0}, {1})",
+                rn.korFullText,
+                "\"$keyword\""
+            ).desc())
             .fetch()
     }
 
@@ -87,7 +94,7 @@ class AddressRepository(
                 Double::class.javaObjectType,
                 "function('match', {0}, {1})",
                 targetEntity.korFullText,
-                keyword
+                "\"$keyword\""
             ).gt(0)
 
             else -> numberTemplate(
