@@ -35,7 +35,7 @@ class AddressController(
         return addressService.searchAddress(page, keyword)
     }
 
-    @GetMapping("/count")
+    @GetMapping("/search/count")
     fun addressCount(
         @RequestParam @NotBlank keyword: String,
     ): TotalPageCountResponse {
