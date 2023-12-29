@@ -118,6 +118,7 @@ fun AddressInfo.toRoadNumberEntity(managementNumber: String): List<RoadNumberEnt
             korFullText = jibunKorFullText,
             engFullText = jibunEngFullText,
             managementNumber = managementNumber,
+            korInitialFullText = ""
         )
     }.plus(
         RoadNumberEntity(
@@ -139,6 +140,7 @@ fun AddressInfo.toRoadNumberEntity(managementNumber: String): List<RoadNumberEnt
             korFullText = addressKorFullText,
             engFullText = addressEngFullText,
             managementNumber = managementNumber,
+            korInitialFullText = ""
         )
     )
 }
