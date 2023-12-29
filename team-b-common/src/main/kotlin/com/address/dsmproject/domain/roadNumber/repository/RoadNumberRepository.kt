@@ -12,7 +12,4 @@ interface RoadNumberRepository : JpaRepository<RoadNumberEntity, UUID> {
     @Transactional
     @Query(value = "truncate table tbl_road_number", nativeQuery = true)
     fun truncateTable()
-
-    @Query(value = "select * from tbl_road_number where match(kor_full_text, eng_full_text) against (?1)", nativeQuery = true)
-    fun fullTestSearch(keyword: String): List<RoadNumberEntity>
 }
