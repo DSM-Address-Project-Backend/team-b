@@ -81,6 +81,8 @@ fun AddressInfo.toRoadNumberEntity(managementNumber: String): List<RoadNumberEnt
             .addStringIf(true, "${it.cityProvinceNameEng}, Korea", ", ")
     }
 
+    val addressInitialFullText = getInitialText(addressKorFullText)
+
     return this.jibuns.map {
         val jibunKorFullText = common.cityProvinceName
             .addStringIf(common.countyDistricts.isNotBlank(), common.countyDistricts)
@@ -97,6 +99,8 @@ fun AddressInfo.toRoadNumberEntity(managementNumber: String): List<RoadNumberEnt
                 .addStringIf(eng.countyDistrictsEng.isNotBlank(), eng.countyDistrictsEng, ", ")
                 .addStringIf(true, "${eng.cityProvinceNameEng}, Korea", ", ")
         }
+
+        val jibunInitialFullText = getInitialText(jibunKorFullText)
 
         RoadNumberEntity(
             cityProvinceName = this.common.cityProvinceName,
@@ -118,7 +122,7 @@ fun AddressInfo.toRoadNumberEntity(managementNumber: String): List<RoadNumberEnt
             korFullText = jibunKorFullText,
             engFullText = jibunEngFullText,
             managementNumber = managementNumber,
-            korInitialFullText = ""
+            korInitialFullText = jibunInitialFullText,
         )
     }.plus(
         RoadNumberEntity(
@@ -140,10 +144,28 @@ fun AddressInfo.toRoadNumberEntity(managementNumber: String): List<RoadNumberEnt
             korFullText = addressKorFullText,
             engFullText = addressEngFullText,
             managementNumber = managementNumber,
-            korInitialFullText = ""
+            korInitialFullText = addressInitialFullText,
         )
     )
 }
 
 fun String.addStringIf(condition: Boolean, target: String, prefix: String = " "): String =
     if (condition) this + prefix + target else this
+
+fun getInitialText(targetText: String): String {
+    val initialChs = listOf(
+        "ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ",
+        "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ",
+        "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ",
+        "ㅋ", "ㅌ", "ㅍ", "ㅎ"
+    )
+
+    var initialText = ""
+
+    for (t in targetText) {
+        val targetIdx = (t - '\uAC00') / (21 * 28) // 초성 Idx 찾는 식
+        initialText += initialChs[targetIdx]
+    }
+
+    return initialText
+}
