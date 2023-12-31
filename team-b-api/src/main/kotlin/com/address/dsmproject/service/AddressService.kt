@@ -17,6 +17,7 @@ class AddressService(
     companion object {
         const val KOREAN = "KOREAN"
         const val ENGLISH = "ENGLISH"
+        const val INITIAL = "INITIAL"
     }
 
     fun autoCompletion(keyword: String): AutoCompletionsResponse {
@@ -24,6 +25,7 @@ class AddressService(
 
         val result = when (languageType) {
             KOREAN -> addressRepository.autoCompletionWithLanguageType(keyword, KOREAN)
+            INITIAL -> addressRepository.autoCompletionWithLanguageType(keyword, INITIAL)
             else -> addressRepository.autoCompletionWithLanguageType(keyword, ENGLISH)
         }
 
@@ -86,6 +88,14 @@ class AddressService(
         return TotalPageCountResponse(totalPageCount.toInt())
     }
 
-    private fun checkLanguage(keyword: String) =
-        if (keyword.matches("^[^a-zA-Z]*$".toRegex())) KOREAN else ENGLISH
+    private fun checkLanguage(keyword: String): String {
+        val isInitial = keyword.matches("^[ㄱ-ㅎ]{2,}".toRegex())
+        val isKor = keyword.matches("^[^a-zA-Z]*$".toRegex())
+
+        return when {
+            isInitial -> INITIAL
+            isKor -> KOREAN
+            else -> ENGLISH
+        }
+    }
 }
