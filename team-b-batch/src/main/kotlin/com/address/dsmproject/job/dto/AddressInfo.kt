@@ -161,13 +161,15 @@ fun getInitialText(targetText: String): String {
     )
 
     var initialText = ""
-    
+
     for (t in targetText) {
-        if (t in '\uAC00'..'\uD7A3') {
-            val targetIdx = (t - '\uAC00') / (21 * 28) // 초성 Idx 찾는 식
-            initialText += initialChs[targetIdx]
-        } else {
-            initialText += t
+        when {
+            t in '\uAC00'..'\uD7A3' -> {
+                val targetIdx = (t - '\uAC00') / (21 * 28) // 초성 Idx 찾는 식
+                initialText += initialChs[targetIdx]
+            }
+
+            else -> initialText += t
         }
     }
 
