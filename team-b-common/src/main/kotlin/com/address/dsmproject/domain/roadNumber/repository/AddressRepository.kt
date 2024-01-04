@@ -6,8 +6,6 @@ import com.address.dsmproject.domain.roadNumber.repository.vo.AutoCompletionAddr
 import com.address.dsmproject.domain.roadNumber.repository.vo.QAutoCompletionAddressVO
 import com.address.dsmproject.domain.roadNumber.repository.vo.QSearchAddressVo
 import com.address.dsmproject.domain.roadNumber.repository.vo.SearchAddressVo
-import com.address.dsmproject.domain.roadNumber.type.RoadNumberType
-import com.address.dsmproject.domain.roadNumber.type.RoadNumberType.*
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.Expressions.numberTemplate
 import com.querydsl.jpa.impl.JPAQueryFactory
@@ -20,6 +18,7 @@ class AddressRepository(
     companion object {
         const val LIMIT = 10L
         const val KOREAN = "KOREAN"
+        const val INITIAL = "INITIAL"
     }
 
     fun autoCompletionWithLanguageType(
@@ -95,6 +94,13 @@ class AddressRepository(
                 "function('match', {0}, {1})",
                 targetEntity.korFullText,
                 "\"$keyword*\""
+            ).gt(0)
+
+            INITIAL -> numberTemplate(
+                Double::class.javaObjectType,
+                "function('match', {0}, {1})",
+                targetEntity.korInitialFullText,
+                "\"$keyword\""
             ).gt(0)
 
             else -> numberTemplate(
