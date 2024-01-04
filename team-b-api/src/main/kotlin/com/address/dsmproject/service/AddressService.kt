@@ -89,7 +89,7 @@ class AddressService(
     }
 
     private fun checkLanguage(keyword: String): String {
-        val isInitial = keyword.matches("^[ㄱ-ㅎ]{2,}".toRegex())
+        val isInitial = keyword.matches("[ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ]+".toRegex())
         val isKor = keyword.matches("^[^a-zA-Z]*$".toRegex())
 
         return when {
